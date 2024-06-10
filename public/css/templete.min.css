@@ -2333,7 +2333,7 @@ p {
 .header-style-4.style-1 .navicon span,
 .header-style-5 .navicon span,
 .header-style-6 .navicon span {
-    background: #fff;
+    background: black;
 }
 
 .navicon span:nth-child(1) {
