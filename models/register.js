@@ -32,6 +32,26 @@ const playerSchema = new mongoose.Schema({
             }
         }
     },
+    city: {
+        type: String,
+        required: true
+    },
+    state: {
+        type: String,
+        required: true
+    },
+    bank_account_no: {
+        type: Number,
+        required: true
+    },
+    bank_name: {
+        type: String,
+        required: true
+    },
+    ifsc_code: {
+        type: String,
+        required: true
+    },
     gender: {
         type: String,
         required: true
