@@ -68,8 +68,9 @@
 
                             <div class="logo-header logo-colot mostion logo-color">
                                 {{#if user}}
-                                <h2>Welcome <b style="color:rgb(0, 132, 255)">{{user.firstname}}</b> <a class="userProfile" href="/userProfile">View Profile</a></h2>
-                                
+                                <h2>Welcome <b style="color:rgb(0, 132, 255)">{{user.firstname}}</b><br>
+                                    <a class="userProfile" href="/userProfile">View Profile</a>
+                                </h2>
                                 {{else}}
                                 <h2>Welcome</h2>
                                 {{/if}}
@@ -93,8 +94,11 @@
                                             target="blank">Login</a></li>
                                     <li class="active" style="padding-left:5px;"> <a href="/register"
                                             target="blank">Register</a></li>
+                                    {{#if user}}
                                     <li class="active" style="padding-left:5px;"> <a href="/logout"
                                             target="blank">Logout</a></li>
+                                    {{else}}
+                                    {{/if}}
                                 </ul>
                             </div>
                         </div>
@@ -282,7 +286,7 @@
 
 
 
-
+            {{#if user}}
             <section>
                 <div class="telegram">
                     <a target="_blank" href="https://t.me/boost/sdfootball1">
@@ -293,6 +297,8 @@
                     </a>
                 </div>
             </section>
+            {{else}}
+            {{/if}}
 
 
 

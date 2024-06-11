@@ -4902,6 +4902,10 @@ blockquote:before {
     border-radius: 5px;
 }
 
+.userProfile:hover{
+    color : white;
+}
+
 /* owl dots button */
 
 .owl-theme .owl-dots {
