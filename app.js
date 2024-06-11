@@ -49,6 +49,10 @@ app.get('/contact', (req, res) => {
     res.render("contact");
 });
 
+app.get('/userProfile', auth, (req, res) => {
+    res.render("userProfile", { user: req.user });
+});
+
 // app.get('/teams', (req, res) => {
 //     res.render("teams");
 // });

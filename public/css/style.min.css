@@ -4891,6 +4891,17 @@ blockquote:before {
     cursor: default
 }
 
+/* User Profile */
+
+.userProfile{
+    font-size: 20px;
+    font-weight: bold;
+    color : white;
+    background: rgb(11, 192, 11);
+    padding : 5px;
+    border-radius: 5px;
+}
+
 /* owl dots button */
 
 .owl-theme .owl-dots {

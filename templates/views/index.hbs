@@ -67,8 +67,14 @@
                                         src="images/logo.png" width="30" height="20" alt></a></div> -->
 
                             <div class="logo-header logo-colot mostion logo-color">
-                                <h2>Welcome <b style="color:rgb(0, 132, 255)">{{user.firstname}}</b></h2>
+                                {{#if user}}
+                                <h2>Welcome <b style="color:rgb(0, 132, 255)">{{user.firstname}}</b> <a class="userProfile" href="/userProfile">View Profile</a></h2>
+                                
+                                {{else}}
+                                <h2>Welcome</h2>
+                                {{/if}}
                             </div>
+
                             <button id="navicon" class="navbar-toggler navicon" type="button" aria-expanded="false"
                                 aria-label="Toggle navigation">
                                 <span></span>
@@ -180,11 +186,11 @@
                                             data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]"
                                             data-paddingleft="[0,0,0,0]"
                                             style="z-index: 8; white-space: nowrap; background-color:rgba(0, 0, 0, 0) !important;">
-                                            <a style="background-color: #5BBCFF;" href="register.html" target="blank"
+                                            <a style="background-color: #5BBCFF;" href="/register" target="blank"
                                                 class="site-button m-r15">Register Now
                                             </a>
                                         </div>
-                                       
+
                                     </li>
 
                                 </ul>
@@ -619,4 +625,3 @@
 </body>
 
 </html>
-
