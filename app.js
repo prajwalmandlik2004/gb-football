@@ -63,12 +63,26 @@ app.post('/register', async (req, res) => {
         const password = req.body.password;
         const cpassword = req.body.confirmpassword;
 
+        // let userID;
+        // let existingUser;
+        // do {
+        //     userID = generateUserID();
+        //     existingUser = await Register.findOne({ userid: userID });
+        // } while (existingUser);
+
+        // Generate referral link
+        // const referralLink = `${req.protocol}://${req.get('host')}/referral/${userid}`;
+
         if (password === cpassword) {
+
+            const referralLink = `${req.protocol}://${req.get('host')}/referral/${req.body.userid}`;
+
             const registerEmployee = new Register({
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
                 email: req.body.email,
                 userid: req.body.userid,
+                referrallink: referralLink,
                 city: req.body.city,
                 state: req.body.state,
                 bank_account_no: req.body.bank_account_no,
@@ -135,5 +149,6 @@ app.post('/login', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
 
 
