@@ -97,12 +97,11 @@ playerSchema.methods.genAuthToken = async function () {
         return token;
 
     } catch (error) {
-        res.send(error);
+        // res.send(error);
         console.log(error);
+        throw new Error('Token generation failed');
     }
 }
-
-
 
 
 // Password Hashing : ( Middleware )

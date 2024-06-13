@@ -30,6 +30,7 @@ app.get('/logout', auth, async (req, res) => {
     try {
         req.user.tokens = [];
         res.clearCookie("jwt");
+        console.log("Logout Successfully !!");
         await req.user.save();
         res.render("login");
     } catch (error) {
@@ -81,7 +82,7 @@ app.post('/register', async (req, res) => {
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
                 email: req.body.email,
-                userid: req.body.userid,
+                userid : req.body.userid,
                 referrallink: referralLink,
                 city: req.body.city,
                 state: req.body.state,
@@ -108,6 +109,7 @@ app.post('/register', async (req, res) => {
             res.send("Password is not matching");
         }
     } catch (error) {
+        console.log("Error :"  , error);
         if (error.code === 11000 && error.keyPattern && error.keyPattern.phone) {
             res.status(400).send("Phone number is already registered");
         } else {
@@ -149,6 +151,5 @@ app.post('/login', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
 
 
