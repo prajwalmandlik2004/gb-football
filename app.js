@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cookieParser());
+// app.use(auth);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "./public")));
 app.set("view engine", "hbs");
@@ -193,13 +194,14 @@ app.post('/login', async (req, res) => {
         const token = await userEmail.genAuthToken();
 
         // Set the token as a cookie
-        res.cookie('token', token, { httpOnly: true });
+        // res.cookie('token', token, { httpOnly: true });
 
-        // res.cookie("jwt", token, {
-        //     expires: new Date(Date.now() + 600000),
-        //     httpOnly: true
-        // });
+        res.cookie("jwt", token, {
+            expires: new Date(Date.now() + 600000),
+            httpOnly: true
+        });
 
+      
         res.status(201).render("index", { user: userEmail });
     } catch (error) {
         res.status(400).send(error);
