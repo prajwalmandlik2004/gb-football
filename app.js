@@ -5,6 +5,8 @@ const hbs = require('hbs');
 require('dotenv').config();
 require('./database/connection');
 const Register = require('./models/register');
+const Deposit = require('./models/deposit');
+const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
 const auth = require('./middleware/auth');
@@ -16,6 +18,24 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "./public")));
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "./templates/views"));
+
+// Multer configuration for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
+
+app.get('/', (req, res) => {
+    res.render("index", { user: req.user });
+});
+
+
 
 app.get('/', (req, res) => {
     res.render("index", { user: req.user });
@@ -50,9 +70,44 @@ app.get('/contact', (req, res) => {
     res.render("contact");
 });
 
-app.get('/userProfile', auth, (req, res) => {
-    res.render("userProfile", { user: req.user });
+app.get('/dashboard', (req, res) => {
+    res.render("dashboard", { user: req.user });
 });
+
+// app.get('/userProfile', auth, (req, res) => {
+//     res.render("userProfile", { user: req.user });
+// });
+
+// app.get('/userProfile', auth, async (req, res) => {
+//     try {
+//         const user = await Register.findById(req.user._id);
+//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+
+//         res.render('userProfile', { user, deposits });
+//     } catch (error) {
+//         console.error('Error fetching user profile:', error);
+//         res.status(500).send('Error fetching user profile.');
+//     }
+// });
+
+app.get('/userProfile', auth, async (req, res) => {
+    try {
+        const user = await Register.findById(req.user._id);
+        const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+
+        // Calculate the total balance
+        const totalBalance = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+
+        res.render('userProfile', { user, deposits, totalBalance });
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).send('Error fetching user profile.');
+    }
+});
+
+
+
+
 
 // app.get('/teams', (req, res) => {
 //     res.render("teams");
@@ -82,7 +137,7 @@ app.post('/register', async (req, res) => {
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
                 email: req.body.email,
-                userid : req.body.userid,
+                userid: req.body.userid,
                 referrallink: referralLink,
                 city: req.body.city,
                 state: req.body.state,
@@ -109,7 +164,7 @@ app.post('/register', async (req, res) => {
             res.send("Password is not matching");
         }
     } catch (error) {
-        console.log("Error :"  , error);
+        console.log("Error :", error);
         if (error.code === 11000 && error.keyPattern && error.keyPattern.phone) {
             res.status(400).send("Phone number is already registered");
         } else {
@@ -137,10 +192,13 @@ app.post('/login', async (req, res) => {
 
         const token = await userEmail.genAuthToken();
 
-        res.cookie("jwt", token, {
-            expires: new Date(Date.now() + 600000),
-            httpOnly: true
-        });
+        // Set the token as a cookie
+        res.cookie('token', token, { httpOnly: true });
+
+        // res.cookie("jwt", token, {
+        //     expires: new Date(Date.now() + 600000),
+        //     httpOnly: true
+        // });
 
         res.status(201).render("index", { user: userEmail });
     } catch (error) {
@@ -148,8 +206,113 @@ app.post('/login', async (req, res) => {
     }
 });
 
+
+// Handle deposit request
+app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
+    try {
+        const { amount, username, userid, userpassword } = req.body;
+        const screenshot = req.file.path;
+
+        // Validate or process the new fields as necessary
+        console.log(`Username: ${username}`);
+        console.log(`User ID: ${userid}`);
+        console.log(`User Password: ${userpassword}`);
+
+        const newDeposit = new Deposit({
+            userId: req.user._id,
+            username: username,
+            userid: userid,
+            userpassword: userpassword,
+            amount: amount,
+            screenshot: screenshot,
+            status: 'Pending'
+        });
+
+        await newDeposit.save();
+        res.status(201).send('Deposit request submitted successfully.');
+    } catch (error) {
+        console.error('Error during deposit:', error);
+        res.status(500).send('Error processing deposit request.');
+    }
+});
+
+
+const cron = require('node-cron');
+
+// Function to update the user's deposit history
+const updateDepositHistory = async (depositId) => {
+    try {
+        const deposit = await Deposit.findById(depositId);
+
+        if (!deposit) {
+            console.error('Deposit not found');
+            return;
+        }
+
+        // Update deposit status to "Completed"
+        deposit.status = 'Completed';
+        await deposit.save();
+        console.log('Deposit status updated to Completed');
+    } catch (error) {
+        console.error('Error updating deposit status:', error);
+    }
+};
+
+app.post('/verify-deposit', auth, async (req, res) => {
+    try {
+        const { depositId } = req.body;
+        const deposit = await Deposit.findById(depositId);
+
+        if (!deposit) {
+            return res.status(404).send('Deposit not found');
+        }
+
+        deposit.status = 'Verified';
+        await deposit.save();
+
+        // Schedule a job to update the deposit status after 15 minutes
+        cron.schedule('*/15 * * * *', () => {
+            updateDepositHistory(depositId);
+        }, {
+            scheduled: true,
+            timezone: "YOUR_TIMEZONE" // Replace with your timezone
+        });
+
+        res.status(200).send('Deposit verified successfully.');
+    } catch (error) {
+        console.error('Error verifying deposit:', error);
+        res.status(500).send('Error verifying deposit.');
+    }
+});
+
+// Route to update deposit status
+app.post('/updateDepositStatus', auth, async (req, res) => {
+    try {
+        const { depositId, status } = req.body;
+
+        // Find the deposit by ID and update the status
+        const deposit = await Deposit.findById(depositId);
+        if (!deposit) {
+            return res.status(404).send('Deposit not found');
+        }
+
+        deposit.status = status;
+        await deposit.save();
+
+        res.status(200).send('Deposit status updated successfully');
+    } catch (error) {
+        console.error('Error updating deposit status:', error);
+        res.status(500).send('Error updating deposit status');
+    }
+});
+
+
+
+
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
 
 

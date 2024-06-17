@@ -19,8 +19,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-img">
-                        <img src="/images/userProfile.png"
-                            alt="" />
+                        <img src="/images/userProfile.png" alt="" />
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -46,9 +45,16 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-work">
-                        {{!-- <p>Debit History</p>
-                        <br>
-                        <p>Withdrawal History</p> --}}
+                        <h4>Account Balanace</h4>
+                        <h6 class="balance">{{totalBalance}} RS</h6>
+                        {{#each deposits}}
+                        <div class="deposit">  
+                            <h6>Debit History</h6>
+                            <p>Amount: {{this.amount}} RS</p>
+                            {{!-- <p>Date: {{this.createdAt}}</p> --}}
+                            <p>Status: {{this.status}}</p>
+                        </div>
+                        {{/each}}
                     </div>
                 </div>
                 <div class="col-md-8">
@@ -62,7 +68,7 @@
                                     <p>{{user.userid}}</p>
                                 </div>
                             </div>
-                             <div class="row">
+                            <div class="row">
                                 <div class="col-md-6">
                                     <label>Referral Link</label>
                                 </div>

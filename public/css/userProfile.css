@@ -96,10 +96,16 @@
 }
 
 .profile-work p {
-    font-size: 12px;
-    color: #818182;
-    font-weight: 600;
+    font-size: 15px;
+    color:black;
+    /* font-weight: bold; */
     margin-top: 10%;
+}
+
+.balance{
+    color : white;
+    background: rgb(7, 185, 7);
+    padding :10px;
 }
 
 .profile-work a {

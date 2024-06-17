@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body>
+    <div class="container">
+        <h3>Deposit Funds</h3>
+        <div id="depositFormDiv">
+            <form id="depositForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="userid">User ID</label>
+                    <input type="text" id="userid" name="userid" required>
+                </div>
+                <div class="form-group">
+                    <label for="userpassword">User Password</label>
+                    <input type="password" id="userpassword" name="userpassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="depositAmount">Enter Amount</label>
+                    <input type="number" id="depositAmount" name="amount" required>
+                </div>
+                <button type="button" id="payNowBtn" class="btn">Pay Now</button>
+            </form>
+        </div>
+
+        <!-- QR Code (initially hidden) -->
+        <div id="qrCode" style="display: none;">
+            <h3>Scan to Pay</h3>
+            <img src="/images/gb_qr.jpg" alt="QR Code">
+            <button id="uploadScreenshotBtn" class="btn">Upload Payment Screenshot</button>
+        </div>
+
+        <!-- Upload Screenshot (initially hidden) -->
+        <div id="uploadScreenshot" style="display: none;">
+            <h3>Upload Screenshot</h3>
+            <form id="screenshotForm">
+                <div class="form-group">
+                    <input type="file" id="screenshot" name="screenshot" accept="image/*" required>
+                </div>
+                <button type="button" id="submitScreenshotBtn" class="btn">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/deposit.js"></script>
+</body>
+
+</html>
+
+
