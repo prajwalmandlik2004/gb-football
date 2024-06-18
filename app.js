@@ -7,6 +7,7 @@ require('./database/connection');
 const Register = require('./models/register');
 const Deposit = require('./models/deposit');
 const Withdrawal = require('./models/withdrawal');
+const Bet = require('./models/bet');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
@@ -76,15 +77,34 @@ app.get('/dashboard', (req, res) => {
     res.render("dashboard", { user: req.user });
 });
 
+// app.get('/withdrawal', auth, async (req, res) => {
+//     try {
+//         const user = await Register.findById(req.user._id);
+//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+
+//         const totalBalance = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+
+//         console.log('User:', user);
+//         console.log('Total Balance:', totalBalance);
+
+//         res.render('withdrawal', { user, totalBalance });
+//     } catch (error) {
+//         console.error('Error fetching user data:', error);
+//         res.status(500).send('Error fetching user data.');
+//     }
+// });
+
 app.get('/withdrawal', auth, async (req, res) => {
     try {
         const user = await Register.findById(req.user._id);
         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+        const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+        const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
 
-        const totalBalance = deposits.reduce((total, deposit) => total + deposit.amount, 0);
-
-        console.log('User:', user);
-        console.log('Total Balance:', totalBalance);
+        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+        const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+        const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+        const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit;
 
         res.render('withdrawal', { user, totalBalance });
     } catch (error) {
@@ -94,50 +114,94 @@ app.get('/withdrawal', auth, async (req, res) => {
 });
 
 
+// app.get('/bet', auth, async (req, res) => {
+//     try {
+//         const user = await Register.findById(req.user._id);
+//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+//         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
 
+//         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+//         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+//         const totalBalance = totalDeposits - totalWithdrawals;
 
-// app.get('/userProfile', auth, (req, res) => {
-//     res.render("userProfile", { user: req.user });
+//         res.render('bet', { user, totalBalance });
+//     } catch (error) {
+//         console.error('Error fetching user data:', error);
+//         res.status(500).send('Error fetching user data.');
+//     }
 // });
+
+
+// app.get('/bet', auth, async (req, res) => {
+//     try {
+//         const user = await Register.findById(req.user._id);
+//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+//         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+
+//         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+//         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+//         const totalBalance = totalDeposits - totalWithdrawals;
+
+//         res.render('bet', { user, totalBalance });
+//     } catch (error) {
+//         console.error('Error fetching user data:', error);
+//         res.status(500).send('Error fetching user data.');
+//     }
+// });
+
+app.get('/bet', auth, async (req, res) => {
+    try {
+        const user = await Register.findById(req.user._id);
+        const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+        const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+        const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
+
+        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+        const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+        const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+        const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit;
+
+        res.render('bet', { user, totalBalance });
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).send('Error fetching user data.');
+    }
+});
+
+
 
 // app.get('/userProfile', auth, async (req, res) => {
 //     try {
 //         const user = await Register.findById(req.user._id);
 //         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+//         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+//         const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
 
-//         res.render('userProfile', { user, deposits });
+//         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+//         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+//         const totalBalance = totalDeposits - totalWithdrawals;
+
+//         res.render('userProfile', { user, deposits, totalBalance, withdrawals, bets });
 //     } catch (error) {
 //         console.error('Error fetching user profile:', error);
 //         res.status(500).send('Error fetching user profile.');
 //     }
 // });
 
-// app.get('/userProfile', auth, async (req, res) => {
-//     try {
-//         const user = await Register.findById(req.user._id);
-//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
-
-//         // Calculate the total balance
-//         const totalBalance = deposits.reduce((total, deposit) => total + deposit.amount, 0);
-
-//         res.render('userProfile', { user, deposits, totalBalance });
-
-
-//     } catch (error) {
-//         console.error('Error fetching user profile:', error);
-//         res.status(500).send('Error fetching user profile.');
-//     }
-// });
 
 // app.get('/userProfile', auth, async (req, res) => {
 //     try {
 //         const user = await Register.findById(req.user._id);
 //         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
-//         const withdrawals = await Withdrawal.find({ userId: req.user._id }).sort({ createdAt: -1 });
+//         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+//         const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
 
-//         const totalBalance = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+//         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+//         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+//         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+//         const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit;
 
-//         res.render('userProfile', { user, deposits, totalBalance, withdrawals });
+//         res.render('userProfile', { user, deposits, totalBalance, withdrawals, bets });
 //     } catch (error) {
 //         console.error('Error fetching user profile:', error);
 //         res.status(500).send('Error fetching user profile.');
@@ -150,17 +214,23 @@ app.get('/userProfile', auth, async (req, res) => {
         const user = await Register.findById(req.user._id);
         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+        const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
 
         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
-        const totalBalance = totalDeposits - totalWithdrawals;
+        const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+        const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit;
 
-        res.render('userProfile', { user, deposits, totalBalance, withdrawals });
+        res.render('userProfile', { user, deposits, totalBalance, withdrawals, bets });
     } catch (error) {
         console.error('Error fetching user profile:', error);
         res.status(500).send('Error fetching user profile.');
     }
 });
+
+
+
+
 
 
 
@@ -459,9 +529,161 @@ app.post('/updateWithdrawalStatus', auth, async (req, res) => {
 });
 
 
+// app.post('/bet', auth, async (req, res) => {
+//     try {
+//         const { userId } = req.body;
+//         const user = await Register.findById(req.user._id);
+
+//         if (!user) {
+//             return res.status(400).send('User not found');
+//         }
+
+//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' });
+//         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' });
+
+//         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+//         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+//         const balance = totalDeposits - totalWithdrawals;
+
+//         const today = new Date().getDay();
+//         const profitRates = {
+//             1: 1.20,
+//             2: 1.23,
+//             3: 1.28,
+//             4: 0.36,
+//             5: 1.20,
+//             6: 1.10,
+//             0: 0.00
+//         };
+//         const profitRate = profitRates[today];
+//         const profit = balance * (profitRate / 100);
+
+//         const newBet = new Bet({
+//             userId: req.user._id,
+//             betUserId: userId,
+//             balance: balance,
+//             profit: profit,
+//             status: 'Pending'
+//         });
+
+//         await newBet.save();
+//         res.status(201).send('Bet successfully placed.');
+//     } catch (error) {
+//         console.error('Error during bet:', error);
+//         res.status(500).send('Error processing bet.');
+//     }
+// });
+
+
+app.post('/bet', auth, async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const user = await Register.findById(req.user._id);
+
+        if (!user) {
+            return res.status(400).send('User not found');
+        }
+
+        const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' });
+        const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' });
+
+        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+        const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+        const balance = totalDeposits - totalWithdrawals;
+
+        const today = new Date().getDay();
+        const profitRates = {
+            1: 1.20,
+            2: 1.23,
+            3: 1.28,
+            4: 0.36,
+            5: 1.20,
+            6: 1.10,
+            0: 0.00
+        };
+        const profitRate = profitRates[today];
+        const profit = balance * (profitRate / 100);
+
+        const newBet = new Bet({
+            userId: req.user._id,
+            betUserId: userId,
+            balance: balance,
+            profit: profit,
+            status: 'Pending'
+        });
+
+        await newBet.save();
+        res.status(201).send('Bet successfully placed.');
+    } catch (error) {
+        console.error('Error during bet:', error);
+        res.status(500).send('Error processing bet.');
+    }
+});
+
+
+
+// Route to update bet status
+// app.post('/updateBetStatus', auth, async (req, res) => {
+//     try {
+//         const { betId, status } = req.body;
+
+//         // Find the bet by ID and update the status
+//         const bet = await Bet.findById(betId);
+//         if (!bet) {
+//             return res.status(404).send('Bet not found');
+//         }
+
+//         bet.status = status;
+//         await bet.save();
+
+//         if (status === 'Approved') {
+//             // Update user's balance in Register model
+//             const user = await Register.findById(bet.userId);
+//             user.balance += bet.profit;
+//             await user.save();
+//         }
+
+//         res.status(200).send('Bet status updated successfully');
+//     } catch (error) {
+//         console.error('Error updating bet status:', error);
+//         res.status(500).send('Error updating bet status');
+//     }
+// });
+
+
+app.post('/updateBetStatus', auth, async (req, res) => {
+    try {
+        const { betId, status } = req.body;
+
+        // Find the bet by ID and update the status
+        const bet = await Bet.findById(betId);
+        if (!bet) {
+            return res.status(404).send('Bet not found');
+        }
+
+        bet.status = status;
+        await bet.save();
+
+        if (status === 'Approved') {
+            // Update user's balance in Register model
+            const user = await Register.findById(bet.userId);
+            user.balance += bet.profit;
+            await user.save();
+        }
+
+        res.status(200).send('Bet status updated successfully');
+    } catch (error) {
+        console.error('Error updating bet status:', error);
+        res.status(500).send('Error updating bet status');
+    }
+});
+
+
+
 
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
 

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Bet</title>
+    <link rel="stylesheet" href="./css/bet.css">
+</head>
+
+<body>
+
+    <form id="betForm" action="/bet" method="POST">
+        <h3>Place Your Bet</h3>
+        <p>Account Balance : {{totalBalance}}</p>
+        <label for="userId">User ID (GBXXXX) :</label>
+        <input type="text" id="userId" name="userId" required>
+
+        <p id="profitDisplay">Profit : </p>
+
+        <button type="button" id="betAllButton">Bet All</button>
+    </form>
+
+    <script>
+        const profitRates = {
+            1: 1.20,
+            2: 1.23,
+            3: 1.28,
+            4: 0.36,
+            5: 1.20,
+            6: 1.10,
+            0: 0.00 // Sunday is off
+        };
+
+        const totalBalance = {{ totalBalance }};
+        const today = new Date().getDay();
+        const profitRate = profitRates[today];
+
+        if (profitRate === 0) {
+            document.getElementById('profitDisplay').innerText = 'Today is off. No betting allowed.';
+            document.getElementById('betAllButton').disabled = true;
+        } else {
+            const profit = (totalBalance * profitRate / 100).toFixed(2);
+            document.getElementById('profitDisplay').innerText = `Profit: ${profit}`;
+        }
+
+        document.getElementById('betAllButton').addEventListener('click', () => {
+            if (totalBalance === 0) {
+                alert('No account balance. Please deposit first.');
+            } else if (profitRate !== 0) {
+                alert('Your bet has been successfully placed.');
+                document.getElementById('betForm').submit();
+            }
+        });
+    </script>
+</body>
+
+</html>
