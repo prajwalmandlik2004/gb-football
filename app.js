@@ -6,6 +6,7 @@ require('dotenv').config();
 require('./database/connection');
 const Register = require('./models/register');
 const Deposit = require('./models/deposit');
+const Withdrawal = require('./models/withdrawal');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
@@ -75,6 +76,26 @@ app.get('/dashboard', (req, res) => {
     res.render("dashboard", { user: req.user });
 });
 
+app.get('/withdrawal', auth, async (req, res) => {
+    try {
+        const user = await Register.findById(req.user._id);
+        const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+
+        const totalBalance = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+
+        console.log('User:', user);
+        console.log('Total Balance:', totalBalance);
+
+        res.render('withdrawal', { user, totalBalance });
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).send('Error fetching user data.');
+    }
+});
+
+
+
+
 // app.get('/userProfile', auth, (req, res) => {
 //     res.render("userProfile", { user: req.user });
 // });
@@ -91,20 +112,57 @@ app.get('/dashboard', (req, res) => {
 //     }
 // });
 
+// app.get('/userProfile', auth, async (req, res) => {
+//     try {
+//         const user = await Register.findById(req.user._id);
+//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+
+//         // Calculate the total balance
+//         const totalBalance = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+
+//         res.render('userProfile', { user, deposits, totalBalance });
+
+
+//     } catch (error) {
+//         console.error('Error fetching user profile:', error);
+//         res.status(500).send('Error fetching user profile.');
+//     }
+// });
+
+// app.get('/userProfile', auth, async (req, res) => {
+//     try {
+//         const user = await Register.findById(req.user._id);
+//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+//         const withdrawals = await Withdrawal.find({ userId: req.user._id }).sort({ createdAt: -1 });
+
+//         const totalBalance = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+
+//         res.render('userProfile', { user, deposits, totalBalance, withdrawals });
+//     } catch (error) {
+//         console.error('Error fetching user profile:', error);
+//         res.status(500).send('Error fetching user profile.');
+//     }
+// });
+
+
 app.get('/userProfile', auth, async (req, res) => {
     try {
         const user = await Register.findById(req.user._id);
         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+        const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
 
-        // Calculate the total balance
-        const totalBalance = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+        const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+        const totalBalance = totalDeposits - totalWithdrawals;
 
-        res.render('userProfile', { user, deposits, totalBalance });
+        res.render('userProfile', { user, deposits, totalBalance, withdrawals });
     } catch (error) {
         console.error('Error fetching user profile:', error);
         res.status(500).send('Error fetching user profile.');
     }
 });
+
+
 
 
 
@@ -201,7 +259,7 @@ app.post('/login', async (req, res) => {
             httpOnly: true
         });
 
-      
+
         res.status(201).render("index", { user: userEmail });
     } catch (error) {
         res.status(400).send(error);
@@ -308,6 +366,71 @@ app.post('/updateDepositStatus', auth, async (req, res) => {
     }
 });
 
+
+
+// Handle withdrawal request
+// app.get('/withdraw', auth, async (req, res) => {
+//     try {
+//         const user = await Register.findById(req.user._id);
+//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+
+//         const totalBalance = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+
+//         console.log('User:', user);
+//         console.log('Total Balance:', totalBalance);
+
+//         res.render('withdrawal', { user, totalBalance });
+//     } catch (error) {
+//         console.error('Error fetching user data:', error);
+//         res.status(500).send('Error fetching user data.');
+//     }
+// });
+
+
+app.post('/api/withdraw', auth, async (req, res) => {
+    try {
+        const { amount, userid } = req.body;
+
+        const newWithdrawal = new Withdrawal({
+            userId: req.user._id,
+            userid: userid,
+            amount: amount
+        });
+
+        await newWithdrawal.save();
+        res.status(201).send('Withdrawal request submitted successfully.');
+    } catch (error) {
+        console.error('Error during withdrawal:', error);
+        res.status(500).send('Error processing withdrawal request.');
+    }
+});
+
+
+
+app.post('/updateWithdrawalStatus', auth, async (req, res) => {
+    try {
+        const { withdrawalId, status } = req.body;
+
+        const withdrawal = await Withdrawal.findById(withdrawalId);
+        if (!withdrawal) {
+            return res.status(404).send('Withdrawal not found');
+        }
+
+        withdrawal.status = status;
+        await withdrawal.save();
+
+        if (status === 'Approved') {
+            const user = await Register.findById(withdrawal.userId);
+            user.balance -= withdrawal.amount;
+            await user.save();
+        }
+
+        res.status(200).send('Withdrawal status updated successfully');
+    } catch (error) {
+        console.error('Error updating withdrawal status:', error);
+        res.status(500).send('Error updating withdrawal status');
+    }
+});
 
 
 

@@ -13,7 +13,6 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="./css/userProfile.css">
 
-
     <div class="container emp-profile">
         <form method="post">
             <div class="row">
@@ -45,13 +44,19 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-work">
-                        <h4>Account Balanace</h4>
+                        <h4>Account Balance</h4>
                         <h6 class="balance">{{totalBalance}} RS</h6>
+                        <h6>Deposit History</h6>
                         {{#each deposits}}
-                        <div class="deposit">  
-                            <h6>Debit History</h6>
+                        <div class="deposit">
                             <p>Amount: {{this.amount}} RS</p>
-                            {{!-- <p>Date: {{this.createdAt}}</p> --}}
+                            <p>Status: {{this.status}}</p>
+                        </div>
+                        {{/each}}
+                        <h6>Withdrawal History</h6>
+                        {{#each withdrawals}}
+                        <div class="withdrawal">
+                            <p>Amount: {{this.amount}} RS</p>
                             <p>Status: {{this.status}}</p>
                         </div>
                         {{/each}}
@@ -141,54 +146,6 @@
                                 </div>
                             </div>
                         </div>
-                        {{!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Experience</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>Expert</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Hourly Rate</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>10$/hr</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Total Projects</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>230</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>English Level</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>Expert</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Availability</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>6 months</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label>Your Bio</label><br />
-                                    <p>Your detail description</p>
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
                 </div>
             </div>
