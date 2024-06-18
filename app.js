@@ -268,15 +268,39 @@ app.post('/login', async (req, res) => {
 
 
 // Handle deposit request
+// app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
+//     try {
+//         const { amount, username, userid, userpassword } = req.body;
+//         const screenshot = req.file.path;
+
+//         // Validate or process the new fields as necessary
+//         console.log(`Username: ${username}`);
+//         console.log(`User ID: ${userid}`);
+//         console.log(`User Password: ${userpassword}`);
+
+//         const newDeposit = new Deposit({
+//             userId: req.user._id,
+//             username: username,
+//             userid: userid,
+//             userpassword: userpassword,
+//             amount: amount,
+//             screenshot: screenshot,
+//             status: 'Pending'
+//         });
+
+//         await newDeposit.save();
+//         res.status(201).send('Deposit request submitted successfully.');
+//     } catch (error) {
+//         console.error('Error during deposit:', error);
+//         res.status(500).send('Error processing deposit request.');
+//     }
+// });
+
+
 app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
     try {
         const { amount, username, userid, userpassword } = req.body;
         const screenshot = req.file.path;
-
-        // Validate or process the new fields as necessary
-        console.log(`Username: ${username}`);
-        console.log(`User ID: ${userid}`);
-        console.log(`User Password: ${userpassword}`);
 
         const newDeposit = new Deposit({
             userId: req.user._id,
@@ -295,6 +319,8 @@ app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
         res.status(500).send('Error processing deposit request.');
     }
 });
+
+
 
 
 const cron = require('node-cron');
@@ -438,6 +464,4 @@ app.post('/updateWithdrawalStatus', auth, async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
-
 

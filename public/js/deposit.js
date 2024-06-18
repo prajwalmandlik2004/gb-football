@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const depositAmountInput = document.getElementById('depositAmount');
     const screenshotInput = document.getElementById('screenshot');
 
-     // Function to update deposit status
-     const updateDepositStatus = async (depositId, status) => {
+    // Function to update deposit status
+    const updateDepositStatus = async (depositId, status) => {
         try {
             const response = await fetch('/updateDepositStatus', {
                 method: 'POST',
@@ -32,10 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('An error occurred.');
         }
     };
-
-    // Example of how you might call this function
-    // Replace with actual logic to determine depositId and when to call this
-    // updateDepositStatus('depositIdHere', 'Success');
 
     payNowBtn.addEventListener('click', () => {
         qrCode.style.display = 'block';
