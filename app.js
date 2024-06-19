@@ -414,6 +414,35 @@ const updateDepositHistory = async (depositId) => {
     }
 };
 
+
+app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
+    try {
+        const { username, userid, userpassword, amount } = req.body;
+        const screenshot = req.file.buffer;
+        const screenshotType = req.file.mimetype;
+
+        // Validate or process the new fields as necessary
+        console.log(`Username: ${username}`);
+        console.log(`User ID: ${userid}`);
+        console.log(`User Password: ${userpassword}`);
+
+        const newDeposit = new Deposit({
+            userId: req.user._id,
+            amount: amount,
+            screenshot: screenshot,
+            screenshotType: screenshotType,
+            status: 'Pending'
+        });
+
+        await newDeposit.save();
+        res.status(201).send('Deposit request submitted successfully.');
+    } catch (error) {
+        console.error('Error during deposit:', error);
+        res.status(500).send('Error processing deposit request.');
+    }
+});
+
+
 app.post('/verify-deposit', auth, async (req, res) => {
     try {
         const { depositId } = req.body;
