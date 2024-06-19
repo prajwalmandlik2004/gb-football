@@ -23,16 +23,38 @@ app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "./templates/views"));
 
 // Multer configuration for file uploads
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, 'uploads/');
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, Date.now() + path.extname(file.originalname));
+//     }
+// });
+
+// const upload = multer({ storage: storage });
+
+// Ensure the uploads directory exists
+const fs = require('fs');
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir);
+}
+
+// Multer configuration for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/');
+        cb(null, uploadsDir);
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
+        const uniqueName = Date.now() + path.extname(file.originalname);
+        cb(null, uniqueName);
     }
 });
 
 const upload = multer({ storage: storage });
+
+
 
 app.get('/', (req, res) => {
     res.render("index", { user: req.user });
@@ -417,30 +439,23 @@ const updateDepositHistory = async (depositId) => {
 
 app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
     try {
-        const { username, userid, userpassword, amount } = req.body;
-        const screenshot = req.file.buffer;
-        const screenshotType = req.file.mimetype;
-
-        // Validate or process the new fields as necessary
-        console.log(`Username: ${username}`);
-        console.log(`User ID: ${userid}`);
-        console.log(`User Password: ${userpassword}`);
-
-        const newDeposit = new Deposit({
+        const deposit = new Deposit({
             userId: req.user._id,
-            amount: amount,
-            screenshot: screenshot,
-            screenshotType: screenshotType,
-            status: 'Pending'
+            amount: req.body.amount,
+            status: 'Pending',
+            method: req.body.method,
+            details: req.body.details,
+            screenshot: req.file.filename
         });
 
-        await newDeposit.save();
-        res.status(201).send('Deposit request submitted successfully.');
+        await deposit.save();
+        res.status(201).send('Deposit saved successfully.');
     } catch (error) {
-        console.error('Error during deposit:', error);
-        res.status(500).send('Error processing deposit request.');
+        console.error('Error saving deposit:', error);
+        res.status(500).send('Error saving deposit.');
     }
 });
+
 
 
 app.post('/verify-deposit', auth, async (req, res) => {
