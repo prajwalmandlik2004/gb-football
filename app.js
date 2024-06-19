@@ -23,36 +23,36 @@ app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "./templates/views"));
 
 // Multer configuration for file uploads
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, 'uploads/');
-//     },
-//     filename: function (req, file, cb) {
-//         cb(null, Date.now() + path.extname(file.originalname));
-//     }
-// });
-
-// const upload = multer({ storage: storage });
-
-// Ensure the uploads directory exists
-const fs = require('fs');
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir);
-}
-
-// Multer configuration for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, uploadsDir);
+        cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
-        const uniqueName = Date.now() + path.extname(file.originalname);
-        cb(null, uniqueName);
+        cb(null, Date.now() + path.extname(file.originalname));
     }
 });
 
 const upload = multer({ storage: storage });
+
+// Ensure the uploads directory exists
+// const fs = require('fs');
+// const uploadsDir = path.join(__dirname, 'uploads');
+// if (!fs.existsSync(uploadsDir)) {
+//     fs.mkdirSync(uploadsDir);
+// }
+
+// // Multer configuration for file uploads
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, uploadsDir);
+//     },
+//     filename: function (req, file, cb) {
+//         const uniqueName = Date.now() + path.extname(file.originalname);
+//         cb(null, uniqueName);
+//     }
+// });
+
+// const upload = multer({ storage: storage });
 
 
 
