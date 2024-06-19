@@ -16,6 +16,10 @@ const withdrawalSchema = new mongoose.Schema({
             }
         }
     },
+    totalBalance: {
+        type: Number,
+        required: true
+    },
     amount: {
         type: Number,
         required: true
@@ -35,5 +39,4 @@ const withdrawalSchema = new mongoose.Schema({
 const Withdrawal = mongoose.model('Withdrawal', withdrawalSchema);
 
 module.exports = Withdrawal;
-
 

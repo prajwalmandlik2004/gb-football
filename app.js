@@ -34,32 +34,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Ensure the uploads directory exists
-// const fs = require('fs');
-// const uploadsDir = path.join(__dirname, 'uploads');
-// if (!fs.existsSync(uploadsDir)) {
-//     fs.mkdirSync(uploadsDir);
-// }
-
-// // Multer configuration for file uploads
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, uploadsDir);
-//     },
-//     filename: function (req, file, cb) {
-//         const uniqueName = Date.now() + path.extname(file.originalname);
-//         cb(null, uniqueName);
-//     }
-// });
-
-// const upload = multer({ storage: storage });
-
-
 
 app.get('/', (req, res) => {
     res.render("index", { user: req.user });
 });
-
 
 
 app.get('/', (req, res) => {
@@ -389,28 +367,7 @@ app.post('/login', async (req, res) => {
 // });
 
 
-app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
-    try {
-        const { amount, username, userid, userpassword } = req.body;
-        const screenshot = req.file.path;
 
-        const newDeposit = new Deposit({
-            userId: req.user._id,
-            username: username,
-            userid: userid,
-            userpassword: userpassword,
-            amount: amount,
-            screenshot: screenshot,
-            status: 'Pending'
-        });
-
-        await newDeposit.save();
-        res.status(201).send('Deposit request submitted successfully.');
-    } catch (error) {
-        console.error('Error during deposit:', error);
-        res.status(500).send('Error processing deposit request.');
-    }
-});
 
 
 
@@ -439,23 +396,26 @@ const updateDepositHistory = async (depositId) => {
 
 app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
     try {
-        const deposit = new Deposit({
+        const { amount, username, userid, userpassword } = req.body;
+        const screenshot = req.file.path;
+
+        const newDeposit = new Deposit({
             userId: req.user._id,
-            amount: req.body.amount,
-            status: 'Pending',
-            method: req.body.method,
-            details: req.body.details,
-            screenshot: req.file.filename
+            username: username,
+            userid: userid,
+            userpassword: userpassword,
+            amount: amount,
+            screenshot: screenshot,
+            status: 'Pending'
         });
 
-        await deposit.save();
-        res.status(201).send('Deposit saved successfully.');
+        await newDeposit.save();
+        res.status(201).send('Deposit request submitted successfully.');
     } catch (error) {
-        console.error('Error saving deposit:', error);
-        res.status(500).send('Error saving deposit.');
+        console.error('Error during deposit:', error);
+        res.status(500).send('Error processing deposit request.');
     }
 });
-
 
 
 app.post('/verify-deposit', auth, async (req, res) => {
@@ -527,16 +487,25 @@ app.post('/updateDepositStatus', auth, async (req, res) => {
 // });
 
 
+// Route to handle withdrawal request
 app.post('/api/withdraw', auth, async (req, res) => {
     try {
-        const { amount, userid } = req.body;
+        const { amount, userid, totalBalance } = req.body;
 
+        
+        if (!amount || !userid || totalBalance === undefined) {
+            return res.status(400).send('Missing required fields');
+        }
+
+        
         const newWithdrawal = new Withdrawal({
             userId: req.user._id,
             userid: userid,
+            totalBalance: totalBalance,
             amount: amount
         });
 
+       
         await newWithdrawal.save();
         res.status(201).send('Withdrawal request submitted successfully.');
     } catch (error) {
@@ -546,11 +515,11 @@ app.post('/api/withdraw', auth, async (req, res) => {
 });
 
 
-
 app.post('/updateWithdrawalStatus', auth, async (req, res) => {
     try {
         const { withdrawalId, status } = req.body;
 
+        
         const withdrawal = await Withdrawal.findById(withdrawalId);
         if (!withdrawal) {
             return res.status(404).send('Withdrawal not found');
@@ -561,6 +530,9 @@ app.post('/updateWithdrawalStatus', auth, async (req, res) => {
 
         if (status === 'Approved') {
             const user = await Register.findById(withdrawal.userId);
+            if (user.balance < withdrawal.amount) {
+                return res.status(400).send('Insufficient balance to approve withdrawal');
+            }
             user.balance -= withdrawal.amount;
             await user.save();
         }
@@ -573,50 +545,7 @@ app.post('/updateWithdrawalStatus', auth, async (req, res) => {
 });
 
 
-// app.post('/bet', auth, async (req, res) => {
-//     try {
-//         const { userId } = req.body;
-//         const user = await Register.findById(req.user._id);
 
-//         if (!user) {
-//             return res.status(400).send('User not found');
-//         }
-
-//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' });
-//         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' });
-
-//         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
-//         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
-//         const balance = totalDeposits - totalWithdrawals;
-
-//         const today = new Date().getDay();
-//         const profitRates = {
-//             1: 1.20,
-//             2: 1.23,
-//             3: 1.28,
-//             4: 0.36,
-//             5: 1.20,
-//             6: 1.10,
-//             0: 0.00
-//         };
-//         const profitRate = profitRates[today];
-//         const profit = balance * (profitRate / 100);
-
-//         const newBet = new Bet({
-//             userId: req.user._id,
-//             betUserId: userId,
-//             balance: balance,
-//             profit: profit,
-//             status: 'Pending'
-//         });
-
-//         await newBet.save();
-//         res.status(201).send('Bet successfully placed.');
-//     } catch (error) {
-//         console.error('Error during bet:', error);
-//         res.status(500).send('Error processing bet.');
-//     }
-// });
 
 
 app.post('/bet', auth, async (req, res) => {

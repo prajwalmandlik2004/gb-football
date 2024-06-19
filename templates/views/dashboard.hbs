@@ -18,7 +18,7 @@
                     <input type="text" id="username" name="username" required>
                 </div>
                 <div class="form-group">
-                    <label for="userid">User ID (GBXXXX) </label>
+                    <label for="userid">User ID (GBXXXX)</label>
                     <input type="text" id="userid" name="userid" required>
                 </div>
                 <div class="form-group">
@@ -26,8 +26,10 @@
                     <input type="password" id="userpassword" name="userpassword" required>
                 </div>
                 <div class="form-group">
-                    <label for="depositAmount">Enter Amount</label>
-                    <input type="number" id="depositAmount" name="amount" required>
+                    <label for="depositAmount">Enter Amount (INR)</label>
+                    <input type="number" id="depositAmount" name="amount" min="100" max="1000000" required>
+                    <br>
+                    <small style="color:red;">Allowed range: 100 - 1,000,000 INR</small>
                 </div>
                 <button type="button" id="payNowBtn" class="btn">Pay Now</button>
             </form>
@@ -56,7 +58,3 @@
 </body>
 
 </html>
-
-
-
-

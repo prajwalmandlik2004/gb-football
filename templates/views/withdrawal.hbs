@@ -11,7 +11,8 @@
 <body>
     <form id="withdrawForm">
         <label for="accountBalance">Account Balance:</label>
-        <span id="accountBalance">{{totalBalance}}</span><br>
+        <span id="accountBalance">{{totalBalance}}</span>
+        <input type="hidden" id="totalBalance" name="totalBalance" value="{{totalBalance}}"><br>
 
         <label for="userId">User ID:</label>
         <span id="userId">{{user._id}}</span><br>
@@ -20,39 +21,58 @@
         <input type="text" id="userid" name="userid" required><br>
 
         <label for="withdrawAmount">Withdraw Amount:</label>
-        <input type="number" id="withdrawAmount" name="withdrawAmount" required><br>
-
+        <input type="number" id="withdrawAmount" name="withdrawAmount" required min="300" max="20000"><br>
+        <p style="color: red;">Withdrawal Charges - 10%</p>
         <p id="calculatedAmountMessage"></p>
-
+        <p id="withdrawalErrorMessage" style="color: red;"></p>
         <button type="submit">Request Withdrawal</button>
     </form>
 
     <script>
         document.getElementById('withdrawAmount').addEventListener('input', () => {
             const withdrawAmount = parseFloat(document.getElementById('withdrawAmount').value);
-            const calculatedAmount = withdrawAmount - (withdrawAmount * 0.10);
-            document.getElementById('calculatedAmountMessage').innerText = `You will get: ${calculatedAmount.toFixed(2)}`;
+            if (withdrawAmount >= 300 && withdrawAmount <= 20000) {
+                const calculatedAmount = withdrawAmount - (withdrawAmount * 0.10);
+                document.getElementById('calculatedAmountMessage').innerText = `You will get: ${calculatedAmount.toFixed(2)}`;
+                document.getElementById('withdrawalErrorMessage').innerText = '';
+            } else {
+                document.getElementById('calculatedAmountMessage').innerText = '';
+                document.getElementById('withdrawalErrorMessage').innerText = 'Withdrawal amount must be between 300 and 20,000 INR.';
+            }
         });
 
         document.getElementById('withdrawForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const withdrawAmount = document.getElementById('withdrawAmount').value;
+            const withdrawAmount = parseFloat(document.getElementById('withdrawAmount').value);
             const userid = document.getElementById('userid').value;
+            const accountBalance = parseFloat(document.getElementById('accountBalance').innerText);
+            const totalBalance = parseFloat(document.getElementById('totalBalance').value);
+
+            if (withdrawAmount < 300 || withdrawAmount > 20000) {
+                document.getElementById('withdrawalErrorMessage').innerText = 'Withdrawal amount must be between 300 and 20,000 INR.';
+                return;
+            }
+
+            if (withdrawAmount > accountBalance) {
+                alert('Low account balance. Withdrawal amount exceeds available balance.');
+                return;
+            }
 
             const response = await fetch('/api/withdraw', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userid: userid, amount: withdrawAmount })
+                body: JSON.stringify({ userid: userid, amount: withdrawAmount, totalBalance: totalBalance })
             });
 
             if (response.ok) {
-                alert('Withdrawal request submitted');
+                alert('Withdrawal request submitted. ✅');
             } else {
-                alert('Failed to submit withdrawal request');
+                alert('Failed to submit withdrawal request. ❌');
             }
         });
     </script>
 </body>
 
 </html>
+
 
