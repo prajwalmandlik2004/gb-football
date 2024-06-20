@@ -75,8 +75,6 @@ const upload = multer({ storage: storage });
 
 
 
-
-
 app.get('/', (req, res) => {
     res.render("index", { user: req.user });
 });
@@ -119,22 +117,8 @@ app.get('/dashboard', (req, res) => {
     res.render("dashboard", { user: req.user });
 });
 
-// app.get('/withdrawal', auth, async (req, res) => {
-//     try {
-//         const user = await Register.findById(req.user._id);
-//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
 
-//         const totalBalance = deposits.reduce((total, deposit) => total + deposit.amount, 0);
 
-//         console.log('User:', user);
-//         console.log('Total Balance:', totalBalance);
-
-//         res.render('withdrawal', { user, totalBalance });
-//     } catch (error) {
-//         console.error('Error fetching user data:', error);
-//         res.status(500).send('Error fetching user data.');
-//     }
-// });
 
 app.get('/withdrawal', auth, async (req, res) => {
     try {
@@ -156,40 +140,7 @@ app.get('/withdrawal', auth, async (req, res) => {
 });
 
 
-// app.get('/bet', auth, async (req, res) => {
-//     try {
-//         const user = await Register.findById(req.user._id);
-//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
-//         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
 
-//         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
-//         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
-//         const totalBalance = totalDeposits - totalWithdrawals;
-
-//         res.render('bet', { user, totalBalance });
-//     } catch (error) {
-//         console.error('Error fetching user data:', error);
-//         res.status(500).send('Error fetching user data.');
-//     }
-// });
-
-
-// app.get('/bet', auth, async (req, res) => {
-//     try {
-//         const user = await Register.findById(req.user._id);
-//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
-//         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
-
-//         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
-//         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
-//         const totalBalance = totalDeposits - totalWithdrawals;
-
-//         res.render('bet', { user, totalBalance });
-//     } catch (error) {
-//         console.error('Error fetching user data:', error);
-//         res.status(500).send('Error fetching user data.');
-//     }
-// });
 
 app.get('/bet', auth, async (req, res) => {
     try {
@@ -209,46 +160,6 @@ app.get('/bet', auth, async (req, res) => {
         res.status(500).send('Error fetching user data.');
     }
 });
-
-
-
-// app.get('/userProfile', auth, async (req, res) => {
-//     try {
-//         const user = await Register.findById(req.user._id);
-//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
-//         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
-//         const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
-
-//         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
-//         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
-//         const totalBalance = totalDeposits - totalWithdrawals;
-
-//         res.render('userProfile', { user, deposits, totalBalance, withdrawals, bets });
-//     } catch (error) {
-//         console.error('Error fetching user profile:', error);
-//         res.status(500).send('Error fetching user profile.');
-//     }
-// });
-
-
-// app.get('/userProfile', auth, async (req, res) => {
-//     try {
-//         const user = await Register.findById(req.user._id);
-//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
-//         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
-//         const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
-
-//         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
-//         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
-//         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
-//         const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit;
-
-//         res.render('userProfile', { user, deposits, totalBalance, withdrawals, bets });
-//     } catch (error) {
-//         console.error('Error fetching user profile:', error);
-//         res.status(500).send('Error fetching user profile.');
-//     }
-// });
 
 
 app.get('/userProfile', auth, async (req, res) => {
@@ -271,18 +182,25 @@ app.get('/userProfile', auth, async (req, res) => {
 });
 
 
+app.get('/history', auth, async (req, res) => {
+    try {
+        const user = await Register.findById(req.user._id);
+        const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+        const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+        const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
 
+        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+        const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+        const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+        const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit;
 
+        res.render('history', { user, deposits, totalBalance, withdrawals, bets });
+    } catch (error) {
+        console.error('Error fetching history :', error);
+        res.status(500).send('Error fetching history .');
+    }
+});
 
-
-
-
-
-
-
-// app.get('/teams', (req, res) => {
-//     res.render("teams");
-// });
 
 
 app.post('/register', async (req, res) => {
@@ -379,128 +297,9 @@ app.post('/login', async (req, res) => {
 });
 
 
-// Handle deposit request
-// app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
-//     try {
-//         const { amount, username, userid, userpassword } = req.body;
-//         const screenshot = req.file.path;
-
-//         // Validate or process the new fields as necessary
-//         console.log(`Username: ${username}`);
-//         console.log(`User ID: ${userid}`);
-//         console.log(`User Password: ${userpassword}`);
-
-//         const newDeposit = new Deposit({
-//             userId: req.user._id,
-//             username: username,
-//             userid: userid,
-//             userpassword: userpassword,
-//             amount: amount,
-//             screenshot: screenshot,
-//             status: 'Pending'
-//         });
-
-//         await newDeposit.save();
-//         res.status(201).send('Deposit request submitted successfully.');
-//     } catch (error) {
-//         console.error('Error during deposit:', error);
-//         res.status(500).send('Error processing deposit request.');
-//     }
-// });
-
-
-
-
-
 
 
 const cron = require('node-cron');
-
-// // Function to update the user's deposit history
-// const updateDepositHistory = async (depositId) => {
-//     try {
-//         const deposit = await Deposit.findById(depositId);
-
-//         if (!deposit) {
-//             console.error('Deposit not found');
-//             return;
-//         }
-
-//         // Update deposit status to "Completed"
-//         deposit.status = 'Completed';
-//         await deposit.save();
-//         console.log('Deposit status updated to Completed');
-//     } catch (error) {
-//         console.error('Error updating deposit status:', error);
-//     }
-// };
-
-// cron.schedule('0 0 * * *', async () => {
-//     try {
-//         const pendingDeposits = await Deposit.find({ status: 'Pending' });
-
-//         for (const deposit of pendingDeposits) {
-//             await updateDepositHistory(deposit._id);
-//         }
-//     } catch (error) {
-//         console.error('Error executing cron job:', error);
-//     }
-// });
-
-
-
-
-// app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
-//     try {
-//         const { amount, username, userid, userpassword } = req.body;
-//         const screenshot = req.file.path;
-
-//         const newDeposit = new Deposit({
-//             userId: req.user._id,
-//             username: username,
-//             userid: userid,
-//             userpassword: userpassword,
-//             amount: amount,
-//             screenshot: screenshot,
-//             status: 'Pending'
-//         });
-
-//         await newDeposit.save();
-//         res.status(201).send('Deposit request submitted successfully.');
-//     } catch (error) {
-//         console.error('Error during deposit:', error);
-//         res.status(500).send('Error processing deposit request.');
-//     }
-// });
-
-
-// app.post('/verify-deposit', auth, async (req, res) => {
-//     try {
-//         const { depositId } = req.body;
-//         const deposit = await Deposit.findById(depositId);
-
-//         if (!deposit) {
-//             return res.status(404).send('Deposit not found');
-//         }
-
-//         deposit.status = 'Verified';
-//         await deposit.save();
-
-//         // Schedule a job to update the deposit status after 15 minutes
-//         cron.schedule('*/15 * * * *', () => {
-//             updateDepositHistory(depositId);
-//         }, {
-//             scheduled: true,
-//             timezone: "YOUR_TIMEZONE" // Replace with your timezone
-//         });
-
-//         res.status(200).send('Deposit verified successfully.');
-//     } catch (error) {
-//         console.error('Error verifying deposit:', error);
-//         res.status(500).send('Error verifying deposit.');
-//     }
-// });
-
 
 
 // Function to update the user's deposit history
@@ -613,36 +412,17 @@ app.post('/updateDepositStatus', auth, async (req, res) => {
 
 
 
-// Handle withdrawal request
-// app.get('/withdraw', auth, async (req, res) => {
-//     try {
-//         const user = await Register.findById(req.user._id);
-//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
-
-//         const totalBalance = deposits.reduce((total, deposit) => total + deposit.amount, 0);
-
-//         console.log('User:', user);
-//         console.log('Total Balance:', totalBalance);
-
-//         res.render('withdrawal', { user, totalBalance });
-//     } catch (error) {
-//         console.error('Error fetching user data:', error);
-//         res.status(500).send('Error fetching user data.');
-//     }
-// });
-
-
 // Route to handle withdrawal request
 app.post('/api/withdraw', auth, async (req, res) => {
     try {
         const { amount, userid, totalBalance } = req.body;
 
-        
+
         if (!amount || !userid || totalBalance === undefined) {
             return res.status(400).send('Missing required fields');
         }
 
-        
+
         const newWithdrawal = new Withdrawal({
             userId: req.user._id,
             userid: userid,
@@ -650,7 +430,7 @@ app.post('/api/withdraw', auth, async (req, res) => {
             amount: amount
         });
 
-       
+
         await newWithdrawal.save();
         res.status(201).send('Withdrawal request submitted successfully.');
     } catch (error) {
@@ -664,7 +444,7 @@ app.post('/updateWithdrawalStatus', auth, async (req, res) => {
     try {
         const { withdrawalId, status } = req.body;
 
-        
+
         const withdrawal = await Withdrawal.findById(withdrawalId);
         if (!withdrawal) {
             return res.status(404).send('Withdrawal not found');
@@ -738,35 +518,6 @@ app.post('/bet', auth, async (req, res) => {
     }
 });
 
-
-
-// Route to update bet status
-// app.post('/updateBetStatus', auth, async (req, res) => {
-//     try {
-//         const { betId, status } = req.body;
-
-//         // Find the bet by ID and update the status
-//         const bet = await Bet.findById(betId);
-//         if (!bet) {
-//             return res.status(404).send('Bet not found');
-//         }
-
-//         bet.status = status;
-//         await bet.save();
-
-//         if (status === 'Approved') {
-//             // Update user's balance in Register model
-//             const user = await Register.findById(bet.userId);
-//             user.balance += bet.profit;
-//             await user.save();
-//         }
-
-//         res.status(200).send('Bet status updated successfully');
-//     } catch (error) {
-//         console.error('Error updating bet status:', error);
-//         res.status(500).send('Error updating bet status');
-//     }
-// });
 
 
 app.post('/updateBetStatus', auth, async (req, res) => {

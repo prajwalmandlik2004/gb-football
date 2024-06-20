@@ -23,6 +23,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="profile-head">
+                        <br><br>
                         <h5>
                             {{user.firstname}} {{user.lastname}}
                         </h5>
@@ -46,7 +47,7 @@
                     <div class="profile-work">
                         <h4>Account Balance</h4>
                         <h6 class="balance">{{totalBalance}} RS</h6>
-                        <h6>Deposit History</h6>
+                        {{!-- <h6>Deposit History</h6>
                         {{#each deposits}}
                         <div class="deposit">
                             <p>Amount: {{this.amount}} RS</p>
@@ -59,11 +60,11 @@
                             <p>Amount: {{this.amount}} RS</p>
                             <p>Status: {{this.status}}</p>
                         </div>
-                        {{/each}}
+                        {{/each}} --}}
                     </div>
                 </div>
-                <div class="col-md-8">
-                    <div class="tab-content profile-tab" id="myTabContent">
+                <div class="col-md-5">
+                    <div class="tab-content profile-tab mb-5" id="myTabContent">
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row">
                                 <div class="col-md-6">
@@ -156,3 +157,5 @@
 </body>
 
 </html>
+
+
