@@ -12,7 +12,16 @@ const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
 const auth = require('./middleware/auth');
+const fs = require('fs');
 const PORT = process.env.PORT || 3000;
+
+
+// Ensure the uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -23,9 +32,20 @@ app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "./templates/views"));
 
 // Multer configuration for file uploads
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, 'uploads/');
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, Date.now() + path.extname(file.originalname));
+//     }
+// });
+
+// const upload = multer({ storage: storage });
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/');
+        cb(null, uploadsDir);
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + path.extname(file.originalname));
@@ -33,6 +53,8 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+
 
 
 app.get('/', (req, res) => {
@@ -392,6 +414,18 @@ const updateDepositHistory = async (depositId) => {
         console.error('Error updating deposit status:', error);
     }
 };
+
+cron.schedule('0 0 * * *', async () => {
+    try {
+        const pendingDeposits = await Deposit.find({ status: 'Pending' });
+
+        for (const deposit of pendingDeposits) {
+            await updateDepositHistory(deposit._id);
+        }
+    } catch (error) {
+        console.error('Error executing cron job:', error);
+    }
+});
 
 
 app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
