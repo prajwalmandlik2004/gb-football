@@ -10,6 +10,8 @@ const Withdrawal = require('./models/withdrawal');
 const Bet = require('./models/bet');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cookieParser = require('cookie-parser');
 const auth = require('./middleware/auth');
 const fs = require('fs');
@@ -17,10 +19,10 @@ const PORT = process.env.PORT || 3000;
 
 
 // Ensure the uploads directory exists
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-}
+// const uploadsDir = path.join(__dirname, 'uploads');
+// if (!fs.existsSync(uploadsDir)) {
+//     fs.mkdirSync(uploadsDir, { recursive: true });
+// }
 
 
 app.use(express.json());
@@ -43,16 +45,34 @@ app.set("views", path.join(__dirname, "./templates/views"));
 
 // const upload = multer({ storage: storage });
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, uploadsDir);
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, uploadsDir);
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, Date.now() + path.extname(file.originalname));
+//     }
+// });
+
+// const upload = multer({ storage: storage });
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'uploads',
+        format: async (req, file) => 'jpg',
+        public_id: (req, file) => Date.now() + path.extname(file.originalname)
     },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
 });
 
 const upload = multer({ storage: storage });
+
 
 
 
@@ -396,6 +416,93 @@ app.post('/login', async (req, res) => {
 
 const cron = require('node-cron');
 
+// // Function to update the user's deposit history
+// const updateDepositHistory = async (depositId) => {
+//     try {
+//         const deposit = await Deposit.findById(depositId);
+
+//         if (!deposit) {
+//             console.error('Deposit not found');
+//             return;
+//         }
+
+//         // Update deposit status to "Completed"
+//         deposit.status = 'Completed';
+//         await deposit.save();
+//         console.log('Deposit status updated to Completed');
+//     } catch (error) {
+//         console.error('Error updating deposit status:', error);
+//     }
+// };
+
+// cron.schedule('0 0 * * *', async () => {
+//     try {
+//         const pendingDeposits = await Deposit.find({ status: 'Pending' });
+
+//         for (const deposit of pendingDeposits) {
+//             await updateDepositHistory(deposit._id);
+//         }
+//     } catch (error) {
+//         console.error('Error executing cron job:', error);
+//     }
+// });
+
+
+
+
+// app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
+//     try {
+//         const { amount, username, userid, userpassword } = req.body;
+//         const screenshot = req.file.path;
+
+//         const newDeposit = new Deposit({
+//             userId: req.user._id,
+//             username: username,
+//             userid: userid,
+//             userpassword: userpassword,
+//             amount: amount,
+//             screenshot: screenshot,
+//             status: 'Pending'
+//         });
+
+//         await newDeposit.save();
+//         res.status(201).send('Deposit request submitted successfully.');
+//     } catch (error) {
+//         console.error('Error during deposit:', error);
+//         res.status(500).send('Error processing deposit request.');
+//     }
+// });
+
+
+// app.post('/verify-deposit', auth, async (req, res) => {
+//     try {
+//         const { depositId } = req.body;
+//         const deposit = await Deposit.findById(depositId);
+
+//         if (!deposit) {
+//             return res.status(404).send('Deposit not found');
+//         }
+
+//         deposit.status = 'Verified';
+//         await deposit.save();
+
+//         // Schedule a job to update the deposit status after 15 minutes
+//         cron.schedule('*/15 * * * *', () => {
+//             updateDepositHistory(depositId);
+//         }, {
+//             scheduled: true,
+//             timezone: "YOUR_TIMEZONE" // Replace with your timezone
+//         });
+
+//         res.status(200).send('Deposit verified successfully.');
+//     } catch (error) {
+//         console.error('Error verifying deposit:', error);
+//         res.status(500).send('Error verifying deposit.');
+//     }
+// });
+
+
+
 // Function to update the user's deposit history
 const updateDepositHistory = async (depositId) => {
     try {
@@ -427,11 +534,15 @@ cron.schedule('0 0 * * *', async () => {
     }
 });
 
-
 app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
     try {
         const { amount, username, userid, userpassword } = req.body;
-        const screenshot = req.file.path;
+        const screenshot = req.file.path; // This should reference the Cloudinary URL
+
+        // Validate or process the new fields as necessary
+        console.log(`Username: ${username}`);
+        console.log(`User ID: ${userid}`);
+        console.log(`User Password: ${userpassword}`);
 
         const newDeposit = new Deposit({
             userId: req.user._id,
@@ -439,7 +550,7 @@ app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
             userid: userid,
             userpassword: userpassword,
             amount: amount,
-            screenshot: screenshot,
+            screenshot: req.file.path, // Save the Cloudinary URL here
             status: 'Pending'
         });
 
@@ -450,7 +561,6 @@ app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
         res.status(500).send('Error processing deposit request.');
     }
 });
-
 
 app.post('/verify-deposit', auth, async (req, res) => {
     try {
@@ -478,6 +588,7 @@ app.post('/verify-deposit', auth, async (req, res) => {
         res.status(500).send('Error verifying deposit.');
     }
 });
+
 
 // Route to update deposit status
 app.post('/updateDepositStatus', auth, async (req, res) => {
