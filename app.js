@@ -29,6 +29,7 @@ app.use(express.json());
 app.use(cookieParser());
 // app.use(auth);
 app.use(express.urlencoded({ extended: false }));
+// console.log('Static files served from:', path.join(__dirname, './public'));
 app.use(express.static(path.join(__dirname, "./public")));
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "./templates/views"));
@@ -141,7 +142,6 @@ app.get('/withdrawal', auth, async (req, res) => {
 
 
 
-
 app.get('/bet', auth, async (req, res) => {
     try {
         const user = await Register.findById(req.user._id);
@@ -202,11 +202,33 @@ app.get('/history', auth, async (req, res) => {
 });
 
 
+app.get('/referral/:userid', async (req, res) => {
+    try {
+        const referrerId = req.params.userid;
+        const referrer = await Register.findOne({ userid: referrerId });
+
+        if (!referrer) {
+            return res.status(404).send('Referrer not found');
+        }
+
+        // Render the registration page with the referrer ID
+        res.render('register', { referrerId: referrerId });
+    } catch (error) {
+        console.error('Error during referral registration:', error);
+        res.status(500).send('Error processing referral link.');
+    }
+});
+
+
 
 app.post('/register', async (req, res) => {
     try {
+
+        // const { password, confirmpassword, referrerId } = req.body;
         const password = req.body.password;
         const cpassword = req.body.confirmpassword;
+        const { referrerId } = req.body;
+
 
         // let userID;
         // let existingUser;
@@ -228,6 +250,7 @@ app.post('/register', async (req, res) => {
                 email: req.body.email,
                 userid: req.body.userid,
                 referrallink: referralLink,
+                referrer: referrerId,
                 city: req.body.city,
                 state: req.body.state,
                 bank_account_no: req.body.bank_account_no,
@@ -261,6 +284,10 @@ app.post('/register', async (req, res) => {
         }
     }
 });
+
+
+
+
 
 app.post('/login', async (req, res) => {
     try {

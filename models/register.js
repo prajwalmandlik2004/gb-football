@@ -35,6 +35,9 @@ const playerSchema = new mongoose.Schema({
     referrallink: {
         type: String
     },
+    referrer: {
+        type: String
+    },
     city: {
         type: String,
         required: true
