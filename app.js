@@ -106,6 +106,7 @@ app.get('/register', (req, res) => {
     res.render("register");
 });
 
+
 app.get('/login', (req, res) => {
     res.render("login");
 });
@@ -117,8 +118,6 @@ app.get('/contact', (req, res) => {
 app.get('/dashboard', (req, res) => {
     res.render("dashboard", { user: req.user });
 });
-
-
 
 
 app.get('/withdrawal', auth, async (req, res) => {
@@ -139,7 +138,6 @@ app.get('/withdrawal', auth, async (req, res) => {
         res.status(500).send('Error fetching user data.');
     }
 });
-
 
 
 app.get('/bet', auth, async (req, res) => {
@@ -260,7 +258,7 @@ app.post('/register', async (req, res) => {
                 age: req.body.age,
                 gender: req.body.gender,
                 password: req.body.password,
-                confirmpassword: req.body.confirmpassword
+                confirmpassword: req.body.confirmpassword,
             });
 
             const token = await registerEmployee.genAuthToken();
