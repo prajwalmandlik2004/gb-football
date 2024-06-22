@@ -180,6 +180,8 @@ app.get('/userProfile', auth, async (req, res) => {
 });
 
 
+
+
 app.get('/history', auth, async (req, res) => {
     try {
         const user = await Register.findById(req.user._id);
@@ -493,9 +495,6 @@ app.post('/updateWithdrawalStatus', auth, async (req, res) => {
         res.status(500).send('Error updating withdrawal status');
     }
 });
-
-
-
 
 
 app.post('/bet', auth, async (req, res) => {

@@ -222,12 +222,31 @@
                     <h2>Copy Referral Link</h2>
                 </div>
                 <div class="input">
-                    <!-- <input type="text" placeholder="Referral Link"> -->
-                    <h6 style="color : red;">{{user.referrallink}}</h6>
+                    <input type="text" id="referralLink" style="padding:5px; width:290px; color : red;font-weight:bold;"
+                        value="{{user.referrallink}}" readonly>
+                    <button style="padding:5px; background:rgb(8, 193, 8);color:white;margin-left:5px;" onclick="copyReferralLink()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-clipboard" viewBox="0 0 16 16">
+                            <path
+                                d="M10 1.5v1h2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1h2v-1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-10a2 2 0 0 0-2-2h-2zm-4-.5v1h4v-1h-4z" />
+                            <path d="M9.5 2a.5.5 0 0 1 .5.5v.5h-4v-.5a.5.5 0 0 1 .5-.5h3z" />
+                        </svg>
+                    </button>
                 </div>
                 {{else}}
                 {{/if}}
             </section>
+
+            <script>
+                function copyReferralLink() {
+                    var referralLinkInput = document.getElementById("referralLink");
+                    referralLinkInput.select();
+                    referralLinkInput.setSelectionRange(0, 99999);
+                    document.execCommand("copy");
+                    alert("Copied the referral link : " + referralLinkInput.value + " ✅");
+                }
+            </script>
+
 
 
             <div class="section-full bg-white content-inner-1 bg-img-fix overlay-white-dark">
@@ -338,8 +357,8 @@
                         <p class="profit-button"></p>
                         <a href="#" class="btn btn-primary">Live </a>
                         {{#if user}}
-                        <a href="/bet" 
-                            class="btn btn-primary bet-now-button america-bet" style="background : rgb(8, 193, 8);">Bet Now</a>
+                        <a href="/bet" class="btn btn-primary bet-now-button america-bet"
+                            style="background : rgb(8, 193, 8);">Bet Now</a>
                         {{else}}
                         {{/if}}
                     </div>
@@ -351,7 +370,8 @@
                         <p class="profit-button"></p>
                         <a href="#" class="btn btn-primary">Live</a>
                         {{#if user}}
-                        <a href="/bet" class="btn btn-primary bet-now-button india-bet" style="background : rgb(8, 193, 8);">Bet
+                        <a href="/bet" class="btn btn-primary bet-now-button india-bet"
+                            style="background : rgb(8, 193, 8);">Bet
                             Now</a>
                         {{else}}
                         {{/if}}
@@ -365,8 +385,8 @@
                         <p class="profit-button"></p>
                         <a href="#" class="btn btn-primary">Live</a>
                         {{#if user}}
-                        <a href="/bet" 
-                            class="btn btn-primary bet-now-button japan-bet" style="background : rgb(8, 193, 8);">Bet Now</a>
+                        <a href="/bet" class="btn btn-primary bet-now-button japan-bet"
+                            style="background : rgb(8, 193, 8);">Bet Now</a>
                         {{else}}
                         {{/if}}
                     </div>
