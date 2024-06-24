@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             button.style.pointerEvents = 'auto';
             button.addEventListener('click', (event) => {
                 event.preventDefault();
-                alert('Betting is off.');
+                alert('Betting is off 🚫');
             });
         }
     }
@@ -76,3 +76,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+

@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const userpasswordInput = document.getElementById('userpassword');
     const depositAmountInput = document.getElementById('depositAmount');
     const screenshotInput = document.getElementById('screenshot');
+    const bonusDisplay = document.getElementById('bonusDisplay'); // Added for bonus display
 
     // Function to update deposit status
     const updateDepositStatus = async (depositId, status) => {
@@ -38,6 +39,36 @@ document.addEventListener('DOMContentLoaded', () => {
         const parsedAmount = parseFloat(amount);
         return !isNaN(parsedAmount) && parsedAmount >= 100 && parsedAmount <= 1000000;
     };
+
+    // Function to calculate and display bonus
+    const calculateBonus = (amount) => {
+        let bonus = 0;
+        if (amount >= 1000 && amount < 2000) {
+            bonus = 50;
+        } else if (amount >= 2000 && amount < 5000) {
+            bonus = 100;
+        } else if (amount >= 5000 && amount < 10000) {
+            bonus = 250;
+        } else if (amount >= 10000 && amount < 20000) {
+            bonus = 500;
+        } else if (amount >= 20000 && amount < 30000) {
+            bonus = 1000;
+        } else if (amount >= 30000 && amount <= 50000) {
+            bonus = 2000;
+        }
+        return bonus;
+    };
+
+    // Event listener for deposit amount input
+    depositAmountInput.addEventListener('input', () => {
+        const amount = parseFloat(depositAmountInput.value.trim());
+        if (validateDepositAmount(amount)) {
+            const bonusAmount = calculateBonus(amount);
+            bonusDisplay.innerText = `Bonus: ₹${bonusAmount.toFixed(2)}`;
+        } else {
+            bonusDisplay.innerText = 'Invalid amount for bonus calculation';
+        }
+    });
 
     // Event listener for Pay Now button
     payNowBtn.addEventListener('click', () => {
@@ -94,6 +125,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
 
 

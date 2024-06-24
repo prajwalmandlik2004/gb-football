@@ -127,7 +127,7 @@ app.get('/withdrawal', auth, async (req, res) => {
         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
         const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
 
-        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
         const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit;
@@ -150,7 +150,7 @@ app.get('/bet', auth, async (req, res) => {
         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
         const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
 
-        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
         const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit;
@@ -200,7 +200,7 @@ app.get('/userProfile', auth, async (req, res) => {
         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
         const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
 
-        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
         const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit;
@@ -226,7 +226,7 @@ app.get('/history', auth, async (req, res) => {
         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
         const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
 
-        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
         const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit;
@@ -324,8 +324,6 @@ app.post('/register', async (req, res) => {
 
 
 
-
-
 app.post('/login', async (req, res) => {
     try {
         const email = req.body.email;
@@ -397,6 +395,52 @@ cron.schedule('0 0 * * *', async () => {
     }
 });
 
+// app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
+//     try {
+//         const { amount, username, userid, userpassword } = req.body;
+//         const screenshot = req.file.path; // This should reference the Cloudinary URL
+
+//         // Validate or process the new fields as necessary
+//         console.log(`Username: ${username}`);
+//         console.log(`User ID: ${userid}`);
+//         console.log(`User Password: ${userpassword}`);
+
+//         const newDeposit = new Deposit({
+//             userId: req.user._id,
+//             username: username,
+//             userid: userid,
+//             userpassword: userpassword,
+//             amount: amount,
+//             screenshot: req.file.path, // Save the Cloudinary URL here
+//             status: 'Pending'
+//         });
+
+//         await newDeposit.save();
+//         res.status(201).send('Deposit request submitted successfully.');
+//     } catch (error) {
+//         console.error('Error during deposit:', error);
+//         res.status(500).send('Error processing deposit request.');
+//     }
+// });
+
+const calculateBonus = (amount) => {
+    let bonus = 0;
+    if (amount >= 1000 && amount < 2000) {
+        bonus = 50;
+    } else if (amount >= 2000 && amount < 5000) {
+        bonus = 100;
+    } else if (amount >= 5000 && amount < 10000) {
+        bonus = 250;
+    } else if (amount >= 10000 && amount < 20000) {
+        bonus = 500;
+    } else if (amount >= 20000 && amount < 30000) {
+        bonus = 1000;
+    } else if (amount >= 30000 && amount <= 50000) {
+        bonus = 2000;
+    }
+    return bonus;
+};
+
 app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
     try {
         const { amount, username, userid, userpassword } = req.body;
@@ -407,13 +451,21 @@ app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
         console.log(`User ID: ${userid}`);
         console.log(`User Password: ${userpassword}`);
 
+        const parsedAmount = parseFloat(amount);
+        if (isNaN(parsedAmount)) {
+            return res.status(400).send('Invalid amount');
+        }
+
+        const bonus = calculateBonus(parsedAmount);
+
         const newDeposit = new Deposit({
             userId: req.user._id,
             username: username,
             userid: userid,
             userpassword: userpassword,
-            amount: amount,
-            screenshot: req.file.path, // Save the Cloudinary URL here
+            amount: parsedAmount,
+            bonus: bonus, // Store the calculated bonus
+            screenshot: screenshot, // Save the Cloudinary URL here
             status: 'Pending'
         });
 

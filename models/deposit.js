@@ -36,6 +36,10 @@ const depositSchema = new mongoose.Schema({
         enum: ['Pending', 'Approved', 'Rejected'],
         default: 'Pending'
     },
+    bonus: {
+        type: Number,
+        default: 0
+    },
     createdAt: {
         type: Date,
         default: Date.now
