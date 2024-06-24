@@ -45,8 +45,13 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-work">
-                        <h4>Account Balance</h4>
+                        <h5>Account Balance</h5>
                         <h6 class="balance">{{totalBalance}} RS</h6>
+                        <h5>Belate Betting Coins</h5>
+                        <h3 class="balance"><img src="/images/coin.png"> {{totalCoins}} </h3>
+                        <p>See your balance history below</p>
+                        <a style="color:white; background:rgb(40, 167, 225);padding:10px;border-radius: 3px;"
+                            href="/history">History</a>
                         {{!-- <h6>Deposit History</h6>
                         {{#each deposits}}
                         <div class="deposit">
@@ -157,5 +162,3 @@
 </body>
 
 </html>
-
-

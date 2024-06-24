@@ -20,6 +20,10 @@ const withdrawalSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    coins: {
+        type: Number,
+        default: 0 // Add default value for coins
+    },
     amount: {
         type: Number,
         required: true

@@ -17,6 +17,10 @@
         <label for="userId">User ID:</label>
         <span id="userId">{{user._id}}</span><br>
 
+        <label for="userCoins">Belate Betting Coins:</label>
+        <span id="userCoins">{{totalCoins}}</span><br>
+        <input type="hidden" id="totalCoins" name="totalCoins" value="{{totalCoins}}"><br>
+
         <label for="userid">User ID (GBXXXX)</label>
         <input type="text" id="userid" name="userid" required><br>
 
@@ -47,6 +51,28 @@
             const userid = document.getElementById('userid').value;
             const accountBalance = parseFloat(document.getElementById('accountBalance').innerText);
             const totalBalance = parseFloat(document.getElementById('totalBalance').value);
+            const totalCoins = parseFloat(document.getElementById('totalCoins').value);
+
+            const coinWithdrawConditions = [
+                { coins: 120, amount: 500 },
+                { coins: 250, amount: 1000 },
+                { coins: 350, amount: 2000 },
+                { coins: 450, amount: 3000 },
+                { coins: 550, amount: 5000 },
+                { coins: 650, amount: 7000 },
+                { coins: 1000, amount: 12000 },
+                { coins: 1200, amount: 15000 },
+                { coins: 1500, amount: 20000 }
+            ];
+
+            const conditionMet = coinWithdrawConditions.some(condition => {
+                return totalCoins >= condition.coins && withdrawAmount <= condition.amount;
+            });
+
+            if (!conditionMet) {
+                document.getElementById('withdrawalErrorMessage').innerText = 'Withdrawal amount does not match the coins balance conditions.';
+                return;
+            }
 
             if (withdrawAmount < 300 || withdrawAmount > 20000) {
                 document.getElementById('withdrawalErrorMessage').innerText = 'Withdrawal amount must be between 300 and 20,000 INR.';
@@ -61,7 +87,7 @@
             const response = await fetch('/api/withdraw', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userid: userid, amount: withdrawAmount, totalBalance: totalBalance })
+                body: JSON.stringify({ userid: userid, amount: withdrawAmount, totalBalance: totalBalance, totalCoins: totalCoins })
             });
 
             if (response.ok) {
@@ -74,5 +100,3 @@
 </body>
 
 </html>
-
-
