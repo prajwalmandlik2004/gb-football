@@ -212,8 +212,8 @@
                     <a target="_blank" href="https://t.me/gbfootball11">
                         <button class="but1">Join Telegram</button>
                     </a>
-                    <a href="#">
-                        <button class="but2">Download App</button>
+                    <a target="_blank" href="https://whatsapp.com/channel/0029Vaiy94CDTkK1NkEgW02Q">
+                        <button class="but2">Join Whatsapp</button>
                     </a>
                 </div>
                 {{#if user}}
@@ -299,24 +299,11 @@
                 </div>
             </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
             {{#if user}}
             <section>
                 <div class="telegram">
 
                     <button id="depositBtn" class="but1">Deposit</button>
-
 
                     <script>
                         document.getElementById('depositBtn').addEventListener('click', function () {
@@ -324,12 +311,47 @@
                         });
                     </script>
 
-
                     <a href="/withdrawal">
                         <button class="but2">Withdraw</button>
                     </a>
+                </div>
 
 
+                <div class="section-full bg-white content-inner-1 bg-img-fix overlay-white-dark">
+                    <div class="container">
+                        <div class="section-head text-center ">
+                            <h2 class="h2 text-uppercase">Withdrawal Rules</h2>
+                            <div class="dez-separator-outer ">
+                                <div class="dez-separator bg-primary style-liner"></div>
+                            </div>
+                            <p>You will see all rules to withdraw money</p>
+                        </div>
+                        <div class="section-content">
+                            <div class="next-match owl-loaded owl-theme owl-dots-none owl-carousel owl-btn-center-lr">
+                                <div class="item p-t20">
+                                    <div class="countdown dez-style-1 text-center">
+                                        <div class="offers">
+                                            120 coins = 500 RS<br>
+                                            250 coins = 1000 RS<br>
+                                            350 coins = 2000 RS<br>
+                                            450 coins = 3000 RS<br>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item p-t20">
+                                    <div class="countdown dez-style-1 text-center">
+                                        <div class="offers">
+                                            550 coins = 5000 RS<br>
+                                            1000 coins = 12000 RS<br>
+                                            1200 coins = 15000 RS<br>
+                                            1500 coins = 20000 RS<br>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
             {{else}}
@@ -387,7 +409,8 @@
                         <a href="#" class="btn btn-primary">Live</a>
                         {{#if user}}
                         <a href="/bet" class="btn btn-primary bet-now-button japan-bet"
-                            style="background : rgb(8, 193, 8);">Bet Now</a>
+                            style="background : rgb(8, 193, 8);">Bet
+                            Now</a>
                         {{else}}
                         {{/if}}
                     </div>
