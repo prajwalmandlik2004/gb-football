@@ -48,7 +48,8 @@ const playerSchema = new mongoose.Schema({
     },
     bank_account_no: {
         type: Number,
-        required: true
+        required: true,
+        unique: true
     },
     bank_name: {
         type: String,
@@ -56,7 +57,8 @@ const playerSchema = new mongoose.Schema({
     },
     ifsc_code: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     gender: {
         type: String,

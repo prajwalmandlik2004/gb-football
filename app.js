@@ -317,7 +317,7 @@ app.post('/register', async (req, res) => {
         if (error.code === 11000 && error.keyPattern && error.keyPattern.phone) {
             res.status(400).send("Phone number is already registered");
         } else {
-            res.status(400).send(error);
+            res.status(400).send("<ul><li>Error - Below Data Must Be Unique ❌</li>\n<li>userid</li><li>email</li><li>phone</li><li>bank account number</li><li>IFSC code</li></ul>");
         }
     }
 });
@@ -713,10 +713,6 @@ app.post('/updateBetStatus', auth, async (req, res) => {
 
 
 
-
-
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
-
