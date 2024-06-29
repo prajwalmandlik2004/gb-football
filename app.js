@@ -292,13 +292,13 @@ app.post('/register', async (req, res) => {
                 userid: req.body.userid,
                 referrallink: referralLink,
                 referrer: referrerId,
-                city: req.body.city,
-                state: req.body.state,
+                // city: req.body.city,
+                // state: req.body.state,
                 bank_account_no: req.body.bank_account_no,
                 bank_name: req.body.bank_name,
                 ifsc_code: req.body.ifsc_code,
                 phone: req.body.phone,
-                age: req.body.age,
+                // age: req.body.age,
                 gender: req.body.gender,
                 password: req.body.password,
                 confirmpassword: req.body.confirmpassword,
@@ -361,6 +361,32 @@ app.post('/login', async (req, res) => {
         res.status(400).send(error);
     }
 });
+
+
+
+app.post('/updateBankDetails', auth, async (req, res) => {
+    try {
+        const userId = req.user._id; // Assuming user ID is stored in req.user
+        const { bank_name, bank_account_no, ifsc_code, phone } = req.body;
+
+        const user = await Register.findByIdAndUpdate(userId, {
+            bank_name,
+            bank_account_no,
+            ifsc_code,
+            phone
+        });
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        res.status(200).send('Bank details updated successfully');
+    } catch (error) {
+        console.log("Error updating bank details:", error);
+        res.status(500).send('Failed to update bank details');
+    }
+});
+
 
 
 

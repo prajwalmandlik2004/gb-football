@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="./css/userProfile.css">
 
     <div class="container emp-profile">
-        <form method="post">
+        <form method="post" id="userProfileForm">
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-img">
@@ -52,20 +52,6 @@
                         <p>See your balance history below</p>
                         <a style="color:white; background:rgb(40, 167, 225);padding:10px;border-radius: 3px;"
                             href="/history">History</a>
-                        {{!-- <h6>Deposit History</h6>
-                        {{#each deposits}}
-                        <div class="deposit">
-                            <p>Amount: {{this.amount}} RS</p>
-                            <p>Status: {{this.status}}</p>
-                        </div>
-                        {{/each}}
-                        <h6>Withdrawal History</h6>
-                        {{#each withdrawals}}
-                        <div class="withdrawal">
-                            <p>Amount: {{this.amount}} RS</p>
-                            <p>Status: {{this.status}}</p>
-                        </div>
-                        {{/each}} --}}
                     </div>
                 </div>
                 <div class="col-md-5">
@@ -113,22 +99,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label>City</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>{{user.city}}</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>State</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>{{user.state}}</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
                                     <label>Bank Name</label>
                                 </div>
                                 <div class="col-md-6">
@@ -151,14 +121,106 @@
                                     <p>{{user.ifsc_code}}</p>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-primary" onclick="showEditForm()">Edit
+                                        Details</button>
+                                </div>
+                            </div>
+                            <br>
+                            <div id="editForm" style="display:none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="bank_name">Bank Name</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" id="bank_name" name="bank_name" value="{{user.bank_name}}">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="bank_account_no">Bank Account No</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" id="bank_account_no" name="bank_account_no"
+                                            value="{{user.bank_account_no}}">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="ifsc_code">IFSC Code</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" id="ifsc_code" name="ifsc_code" value="{{user.ifsc_code}}">
+                                    </div>
+                                </div>
+                                 <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="phone">Phone</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" id="phone" name="phone" value="{{user.phone}}">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-primary"
+                                            onclick="updateBankDetails()">Save</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-secondary"
+                                            onclick="hideEditForm()">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
     </div>
+
+    <script>
+        function showEditForm() {
+            document.getElementById('editForm').style.display = 'block';
+        }
+
+        function hideEditForm() {
+            document.getElementById('editForm').style.display = 'none';
+        }
+
+        async function updateBankDetails() {
+            const bank_name = document.getElementById('bank_name').value;
+            const bank_account_no = document.getElementById('bank_account_no').value;
+            const ifsc_code = document.getElementById('ifsc_code').value;
+            const phone = document.getElementById('phone').value;
+
+            const response = await fetch('/updateBankDetails', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    bank_name,
+                    bank_account_no,
+                    ifsc_code,
+                    phone
+                })
+            });
+
+            if (response.ok) {
+                alert('Bank details updated successfully!✅');
+                window.location.reload();
+            } else {
+                alert('Failed to update bank details. Please try again.❌');
+            }
+        }
+    </script>
+
     <script src="js/app.js"></script>
     <script src="js/auth.js"></script>
 </body>
 
 </html>
+

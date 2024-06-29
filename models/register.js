@@ -38,14 +38,14 @@ const playerSchema = new mongoose.Schema({
     referrer: {
         type: String
     },
-    city: {
-        type: String,
-        required: true
-    },
-    state: {
-        type: String,
-        required: true
-    },
+    // city: {
+    //     type: String,
+    //     required: true
+    // },
+    // state: {
+    //     type: String,
+    //     required: true
+    // },
     bank_account_no: {
         type: Number,
         required: true,
@@ -78,10 +78,10 @@ const playerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    age: {
-        type: Number,
-        required: true
-    },
+    // age: {
+    //     type: Number,
+    //     required: true
+    // },
     tokens: [{
         token: {
             type: String,
