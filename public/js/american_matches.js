@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
             imagePath = './images/6.png';
             break;
         case 0: // Sunday
-            imagePath = './images/default.png';
+            imagePath = './images/8.png';
             break;
         default:
             imagePath = './images/default.png';

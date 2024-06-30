@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         switch (currentDay) {
             case 0: // Sunday
-                disableBetButton(americaBetButton);
+                enableBetButton(americaBetButton);
                 disableBetButton(indiaBetButton);
                 disableBetButton(japanBetButton);
                 break;

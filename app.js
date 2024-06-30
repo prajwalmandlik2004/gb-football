@@ -614,6 +614,7 @@ app.post('/updateWithdrawalStatus', auth, async (req, res) => {
 });
 
 
+
 // app.post('/bet', auth, async (req, res) => {
 //     try {
 //         const { userId } = req.body;
@@ -643,16 +644,22 @@ app.post('/updateWithdrawalStatus', auth, async (req, res) => {
 //         const profitRate = profitRates[today];
 //         const profit = balance * (profitRate / 100);
 
+//         // Corrected totalCoins calculation
+//         const totalCoins = user.coins + 20; // Add 20 coins for each new bet
+//         user.coins = totalCoins;
+//         await user.save();
+
 //         const newBet = new Bet({
 //             userId: req.user._id,
 //             betUserId: userId,
 //             balance: balance,
 //             profit: profit,
-//             status: 'Pending'
+//             status: 'Pending',
+//             coins: 20 // Each bet adds 20 coins
 //         });
 
 //         await newBet.save();
-//         res.status(201).send('Bet successfully placed.');
+//         res.status(201).redirect('/bet');
 //     } catch (error) {
 //         console.error('Error during bet:', error);
 //         res.status(500).send('Error processing bet.');
@@ -677,16 +684,28 @@ app.post('/bet', auth, async (req, res) => {
         const balance = totalDeposits - totalWithdrawals;
 
         const today = new Date().getDay();
-        const profitRates = {
-            1: 1.20,
-            2: 1.23,
-            3: 1.28,
-            4: 0.36,
-            5: 1.20,
-            6: 1.10,
-            0: 0.00
-        };
-        const profitRate = profitRates[today];
+        const currentTime = new Date().getHours();
+
+        let profitRate;
+        if (today === 0 && currentTime >= 10 && currentTime < 13) {
+            profitRate = 2.00;
+        } else {
+            const profitRates = {
+                1: 1.20,
+                2: 1.23,
+                3: 1.28,
+                4: 0.36,
+                5: 1.20,
+                6: 1.10,
+                0: 0.00 // Sunday outside of 10:00 AM - 1:00 PM is off
+            };
+            profitRate = profitRates[today];
+        }
+
+        if (profitRate === 0) {
+            return res.status(400).send('Betting is not allowed today.');
+        }
+
         const profit = balance * (profitRate / 100);
 
         // Corrected totalCoins calculation
