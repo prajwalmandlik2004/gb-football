@@ -702,7 +702,7 @@ app.post('/bet', auth, async (req, res) => {
             profitRate = profitRates[today];
         }
 
-        if (profitRate === 0) {
+        if (today!== 0 && profitRate === 0) {
             return res.status(400).send('Betting is not allowed today.');
         }
 
