@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Bet</title>
     <link rel="stylesheet" href="./css/bet.css">
 </head>
+
 <body>
     <form id="betForm" action="/bet" method="POST">
         <h3>Place Your Bet</h3>
@@ -18,13 +20,13 @@
 
     <script>
         const profitRates = {
-            0: 2.00, // Sunday between 10:00 AM - 1:00 PM
             1: 1.20,
             2: 1.23,
             3: 1.28,
             4: 0.36,
             5: 1.20,
-            6: 1.10
+            6: 1.10,
+            0: 0.00 // Sunday outside of 10:00 AM - 1:00 PM is off
         };
 
         const totalBalance = {{ totalBalance }};
@@ -32,13 +34,13 @@
         const currentTime = new Date().getHours();
 
         let profitRate;
-        if (today === 0 && (currentTime >= 10 && currentTime < 13)) {
+        if (today === 0 && currentTime >= 10 && currentTime < 13) {
             profitRate = 2.00;
         } else {
             profitRate = profitRates[today];
         }
 
-        if (profitRate === 0) {
+        if (today === 0 && profitRate === 0) {
             document.getElementById('profitDisplay').innerText = 'Today is off. No betting allowed.';
             document.getElementById('betAllButton').disabled = true;
         } else {
@@ -56,4 +58,5 @@
         });
     </script>
 </body>
+
 </html>
