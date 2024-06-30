@@ -8,44 +8,39 @@
 </head>
 
 <body>
+
     <form id="betForm" action="/bet" method="POST">
         <h3>Place Your Bet</h3>
         <p>Account Balance : {{totalBalance}}</p>
-        <p>Belate Betting Coins : {{totalCoins}}</p>
+        {{!-- <p>Belate Betting Coins : {{totalCoins}}</p> --}}
         <label for="userId">User ID (GBXXXX) :</label>
         <input type="text" id="userId" name="userId" required>
         <p id="profitDisplay">Profit : </p>
         <button type="button" id="betAllButton">Bet All</button>
     </form>
 
+
     <script>
         const profitRates = {
-            1: 1.20,
-            2: 1.23,
-            3: 1.28,
-            4: 0.36,
-            5: 1.20,
-            6: 1.10,
-            0: 0.00 // Sunday outside of 10:00 AM - 1:00 PM is off
+            1: 2.20,
+            2: 2.05,
+            3: 2.20,
+            4: 1.27,
+            5: 1.90,
+            6: 2.05,
+            0: 0.00 // Sunday is off
         };
 
         const totalBalance = {{ totalBalance }};
         const today = new Date().getDay();
-        const currentTime = new Date().getHours();
+        const profitRate = profitRates[today];
 
-        let profitRate;
-        if (today === 0 && currentTime >= 10 && currentTime < 13) {
-            profitRate = 2.00;
-        } else {
-            profitRate = profitRates[today];
-        }
-
-        if (today === 0 && profitRate === 0) {
+        if (profitRate === 0) {
             document.getElementById('profitDisplay').innerText = 'Today is off. No betting allowed.';
             document.getElementById('betAllButton').disabled = true;
         } else {
             const profit = (totalBalance * profitRate / 100).toFixed(2);
-            document.getElementById('profitDisplay').innerText = `Profit: ${profit}`;
+            document.getElementById('profitDisplay').innerText = Profit: ${ profit };
         }
 
         document.getElementById('betAllButton').addEventListener('click', () => {
@@ -60,3 +55,5 @@
 </body>
 
 </html>
+
+

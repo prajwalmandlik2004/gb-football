@@ -23,10 +23,10 @@ const betSchema = new mongoose.Schema({
         type: String,
         default: 'Pending'
     },
-    coins: {
-        type: Number,
-        default: 0
-    },
+    // coins: {
+    //     type: Number,
+    //     default: 0
+    // },
     createdAt: {
         type: Date,
         default: Date.now
