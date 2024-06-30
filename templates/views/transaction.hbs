@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        h4 {
+            background-color: rgb(14, 193, 14);
+            color: white;
+            padding: 10px;
+        }
+
+        h5 {
+            background-color: rgb(224, 248, 224);
+            border-radius: 20px 10px 20px 10px;
+            padding: 10px;
+        }
+
+        h6 {
+            background-color: rgb(171, 224, 255);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .table th,
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: rgb(224, 248, 224);
+        }
+
+        @media (max-width: 768px) {
+            .table-responsive {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <h5>Name : {{user.firstname}} {{user.lastname}}</h5>
+                <h5>User Id : {{user.userid}}</h5>
+                <p>See Your Income Below</p>
+                <h6>
+                    Trading Income : {{totalBetsProfit}}<br><br>
+                    Referral Income : {{totalReferralIncome}}<br><br>
+                    Team Salary Income : {{totalTeamIncome}}<br><br>
+                    Level Income : {{totalLevelIncome}}
+                </h6>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h4>Team History</h4>
+                <h4>Your Team : {{totalTeam}} Peoples</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Serial No</th>
+                                <th>Name</th>
+                                {{!-- <th>Date and Time</th> --}}
+                                {{!-- <th>Status</th> --}}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each deposits}}
+                            <tr>
+                                {{!-- <td>{{@index}}</td> --}}
+                                {{!-- <td>{{this.amount}} RS</td> --}}
+                                {{!-- <td>{{this.createdAt}}</td> --}}
+                                {{!-- <td>{{this.status}}</td> --}}
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+
+</body>
+
+</html>

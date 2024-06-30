@@ -139,7 +139,7 @@ app.get('/withdrawal', auth, async (req, res) => {
         // const totalCoins = bets.reduce((total, bet) => total + bet.coins, 0);
 
 
-        res.render('withdrawal', { user, totalBalance});
+        res.render('withdrawal', { user, totalBalance });
     } catch (error) {
         console.error('Error fetching user data:', error);
         res.status(500).send('Error fetching user data.');
@@ -162,7 +162,7 @@ app.get('/bet', auth, async (req, res) => {
         // const totalCoins = bets.reduce((total, bet) => total + bet.coins, 0);
 
 
-        res.render('bet', { user, totalBalance});
+        res.render('bet', { user, totalBalance });
     } catch (error) {
         console.error('Error fetching user data:', error);
         res.status(500).send('Error fetching user data.');
@@ -211,7 +211,7 @@ app.get('/userProfile', auth, async (req, res) => {
 
         // const totalCoins = bets.reduce((total, bet) => total + bet.coins, 0);
 
-        res.render('userProfile', { user, deposits, totalBalance, withdrawals, bets});
+        res.render('userProfile', { user, deposits, totalBalance, withdrawals, bets });
     } catch (error) {
         console.error('Error fetching user profile:', error);
         res.status(500).send('Error fetching user profile.');
@@ -219,6 +219,31 @@ app.get('/userProfile', auth, async (req, res) => {
 });
 
 
+app.get('/transaction', auth, async (req, res) => {
+    try {
+        const user = await Register.findById(req.user._id);
+        const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+        const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+        const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
+
+        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
+        const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+        const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+        // const totalReferralIncome = deposits.reduce((total, deposit) => total + (deposit.referralIncome || 0), 0);
+        const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit;
+
+        const totalReferralIncome = deposits.reduce((total, deposit) => total + deposit.referralIncome, 0); // Calculate total referral income
+        const totalTeamIncome = deposits.reduce((total, deposit) => total + deposit.teamIncome, 0); // Calculate total referral income
+        const totalLevelIncome = deposits.reduce((total, deposit) => total + deposit.levelIncome, 0); // Calculate total referral income
+        const totalTeam = deposits.reduce((total, deposit) => total + deposit.yourTeam, 0); // Calculate total referral income
+
+
+        res.render('transaction', { user, deposits, totalBalance, withdrawals, bets, totalReferralIncome , totalTeamIncome , totalLevelIncome , totalTeam});
+    } catch (error) {
+        console.error('Error fetching history :', error);
+        res.status(500).send('Error fetching history .');
+    }
+});
 
 
 
@@ -473,7 +498,7 @@ const calculateBonus = (amount) => {
 
 app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
     try {
-        const { amount, username, userid, userpassword } = req.body;
+        const { amount, username, userid, userpassword, referralIncome , teamIncome , levelIncome , yourTeam } = req.body;
         const screenshot = req.file.path; // This should reference the Cloudinary URL
 
         // Validate or process the new fields as necessary
@@ -496,7 +521,11 @@ app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
             amount: parsedAmount,
             bonus: bonus, // Store the calculated bonus
             screenshot: screenshot, // Save the Cloudinary URL here
-            status: 'Pending'
+            status: 'Pending',
+            referralIncome: parseFloat(referralIncome) || 0,
+            teamIncome: parseFloat(teamIncome) || 0 ,
+            levelIncome: parseFloat(levelIncome) || 0 ,
+            yourTeam: parseFloat(yourTeam) || 0
         });
 
         await newDeposit.save();
@@ -506,6 +535,29 @@ app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
         res.status(500).send('Error processing deposit request.');
     }
 });
+
+
+app.post('/update-referral-income', auth, async (req, res) => {
+    try {
+        const { depositId, newReferralIncome } = req.body;
+
+        const updatedDeposit = await Deposit.findByIdAndUpdate(
+            depositId,
+            { referralIncome: parseFloat(newReferralIncome) },
+            { new: true }
+        );
+
+        if (!updatedDeposit) {
+            return res.status(404).send('Deposit not found');
+        }
+
+        res.status(200).send('Referral income updated successfully');
+    } catch (error) {
+        console.error('Error updating referral income:', error);
+        res.status(500).send('Error updating referral income');
+    }
+});
+
 
 app.post('/verify-deposit', auth, async (req, res) => {
     try {
@@ -559,7 +611,7 @@ app.post('/updateDepositStatus', auth, async (req, res) => {
 
 app.post('/api/withdraw', auth, async (req, res) => {
     try {
-        const { amount, userid, totalBalance} = req.body;
+        const { amount, userid, totalBalance } = req.body;
 
         if (!amount || !userid || totalBalance === undefined) {
             return res.status(400).send('Missing required fields');

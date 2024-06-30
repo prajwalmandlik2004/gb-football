@@ -40,6 +40,26 @@ const depositSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    referralIncome: {
+        type: Number,
+        default: 0
+    },
+    referralIncome: {
+        type: Number,
+        default: 0
+    },
+    teamIncome: {
+        type: Number,
+        default: 0
+    },
+    levelIncome: {
+        type: Number,
+        default: 0
+    },
+    yourTeam: {
+        type: Number,
+        default: 0
+    },
     createdAt: {
         type: Date,
         default: Date.now
