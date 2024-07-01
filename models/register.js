@@ -38,6 +38,10 @@ const playerSchema = new mongoose.Schema({
     referrer: {
         type: String
     },
+    // referrer: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Register'
+    // },
     // city: {
     //     type: String,
     //     required: true

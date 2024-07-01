@@ -162,7 +162,7 @@ app.get('/bet', auth, async (req, res) => {
         // const totalCoins = bets.reduce((total, bet) => total + bet.coins, 0);
 
 
-        res.render('bet', { user, totalBalance});
+        res.render('bet', { user, totalBalance });
     } catch (error) {
         console.error('Error fetching user data:', error);
         res.status(500).send('Error fetching user data.');
@@ -238,9 +238,9 @@ app.get('/transaction', auth, async (req, res) => {
         const totalTeam = deposits.reduce((total, deposit) => total + deposit.yourTeam, 0); // Calculate total referral income
 
         // Fetch referred users
-        const referredUsers = await Register.find({ referrer: req.user._id });
+        const referredUsers = await Register.find({ referrer: req.user.userid });
         
-        res.render('transaction', { user, deposits, totalBalance, withdrawals, bets, totalReferralIncome, totalTeamIncome, totalLevelIncome, totalTeam, referredUsers });
+        res.render('transaction', { user, deposits, totalBetsProfit, totalBalance, withdrawals, bets, totalReferralIncome, totalTeamIncome, totalLevelIncome, totalTeam, referredUsers });
     } catch (error) {
         console.error('Error fetching history :', error);
         res.status(500).send('Error fetching history .');
