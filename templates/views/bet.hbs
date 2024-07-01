@@ -40,7 +40,7 @@
             document.getElementById('betAllButton').disabled = true;
         } else {
             const profit = (totalBalance * profitRate / 100).toFixed(2);
-            document.getElementById('profitDisplay').innerText = Profit: ${ profit };
+            document.getElementById('profitDisplay').innerText = `Profit: ${profit}`;
         }
 
         document.getElementById('betAllButton').addEventListener('click', () => {
@@ -51,9 +51,9 @@
                 document.getElementById('betForm').submit();
             }
         });
+
     </script>
 </body>
 
 </html>
-
 

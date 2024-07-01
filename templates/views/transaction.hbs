@@ -53,50 +53,49 @@
     <div class="container">
         <div class="row mt-4">
             <div class="col-md-12 text-center">
-                <h5>Name : {{user.firstname}} {{user.lastname}}</h5>
-                <h5>User Id : {{user.userid}}</h5>
+                <h5>Name: {{user.firstname}} {{user.lastname}}</h5>
+                <h5>User Id: {{user.userid}}</h5>
                 <p>See Your Income Below</p>
                 <h6>
-                    Trading Income : {{totalBetsProfit}}<br><br>
-                    Referral Income : {{totalReferralIncome}}<br><br>
-                    Team Salary Income : {{totalTeamIncome}}<br><br>
-                    Level Income : {{totalLevelIncome}}
+                    Trading Income: {{totalBetsProfit}}<br><br>
+                    Referral Income: {{totalReferralIncome}}<br><br>
+                    Team Salary Income: {{totalTeamIncome}}<br><br>
+                    Level Income: {{totalLevelIncome}}
                 </h6>
             </div>
         </div>
         <div class="row mt-4">
             <div class="col-md-12">
                 <h4>Team History</h4>
-                <h4>Your Team : {{totalTeam}} Peoples</h4>
+                <h4>Your Team: {{totalTeam}} People</h4>
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>Serial No</th>
                                 <th>Name</th>
-                                {{!-- <th>Date and Time</th> --}}
-                                {{!-- <th>Status</th> --}}
                             </tr>
                         </thead>
                         <tbody>
-                            {{#each deposits}}
+                            {{#each referredUsers}}
                             <tr>
-                                {{!-- <td>{{@index}}</td> --}}
-                                {{!-- <td>{{this.amount}} RS</td> --}}
-                                {{!-- <td>{{this.createdAt}}</td> --}}
-                                {{!-- <td>{{this.status}}</td> --}}
+                                <td>{{@index}}</td>
+                                <td>{{this.firstname}} {{this.lastname}}</td>
                             </tr>
                             {{/each}}
+                            {{#unless referredUsers.length}}
+                            <tr>
+                                <td colspan="2">No referred users found</td>
+                            </tr>
+                            {{/unless}}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-
     <script src="js/app.js"></script>
     <script src="js/auth.js"></script>
-
 </body>
 
 </html>
