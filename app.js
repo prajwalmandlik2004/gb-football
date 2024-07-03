@@ -234,18 +234,15 @@ app.get('/transaction', auth, async (req, res) => {
         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
-        // const totalReferralIncome = deposits.reduce((total, deposit) => total + (deposit.referralIncome || 0), 0);
         const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit;
 
-        const totalReferralIncome = deposits.reduce((total, deposit) => total + deposit.referralIncome, 0); // Calculate total referral income
-        const totalTeamIncome = deposits.reduce((total, deposit) => total + deposit.teamIncome, 0); // Calculate total referral income
-        const totalLevelIncome = deposits.reduce((total, deposit) => total + deposit.levelIncome, 0); // Calculate total referral income
-        const totalTeam = deposits.reduce((total, deposit) => total + deposit.yourTeam, 0); // Calculate total referral income
+        const totalTeamIncome = deposits.reduce((total, deposit) => total + deposit.teamIncome, 0);
+        const totalLevelIncome = deposits.reduce((total, deposit) => total + deposit.levelIncome, 0);
 
         // Fetch referred users
         const referredUsers = await Register.find({ referrer: req.user.userid });
 
-        // Calculate total balance for each referred user
+        // Calculate total balance and referral income for each referred user
         const referredUsersWithBalance = await Promise.all(referredUsers.map(async (referredUser) => {
             const userDeposits = await Deposit.find({ userId: referredUser._id, status: 'Approved' });
             const userWithdrawals = await Withdrawal.find({ userId: referredUser._id, status: 'Approved' });
@@ -263,14 +260,19 @@ app.get('/transaction', auth, async (req, res) => {
             };
         }));
 
+        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.05), 0);
+        const totalTeam = referredUsers.length;
 
-        res.render('transaction', { user, deposits, totalBetsProfit, totalBalance, withdrawals, bets, totalReferralIncome, totalTeamIncome, totalLevelIncome, totalTeam, referredUsers: referredUsersWithBalance });
+        res.render('transaction', {
+            user, deposits, totalBetsProfit, totalBalance, withdrawals, bets,
+            totalReferralIncome, totalTeamIncome, totalLevelIncome, totalTeam,
+            referredUsers: referredUsersWithBalance
+        });
     } catch (error) {
         console.error('Error fetching history :', error);
-        res.status(500).send('Error fetching history .');
+        res.status(500).send('Error fetching history.');
     }
 });
-
 
 
 
