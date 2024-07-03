@@ -43,8 +43,17 @@
             document.getElementById('profitDisplay').innerText = `Profit: ${profit}`;
         }
 
+        document.getElementById('betAllButton').addEventListener('click', () => {
+            if (totalBalance === 0) {
+                alert('No account balance. Please deposit first.');
+            } else if (profitRate !== 0) {
+                alert('Your bet has been successfully placed.✅');
+                document.getElementById('betForm').submit();
+            }
+        });
 
-         document.getElementById('betAllButton').addEventListener('click', async () => {
+
+         {{!-- document.getElementById('betAllButton').addEventListener('click', async () => {
             if (totalBalance === 0) {
                 alert('No account balance. Please deposit first.');
             } else if (profitRate !== 0) {
@@ -72,7 +81,7 @@
                     alert('An error occurred. Please try again.');
                 }
             }
-        });
+        }); --}}
 
     </script>
 </body>

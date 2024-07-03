@@ -757,8 +757,8 @@ app.post('/bet', auth, async (req, res) => {
         const hasEveningBet = existingBets.some(bet => bet.createdAt >= eveningStart && bet.createdAt < eveningEnd);
 
         if ((currentHour >= 10 && currentHour < 13 && hasMorningBet) || (currentHour >= 18 && currentHour < 19 && hasEveningBet)) {
-            // return res.status(400).send('You can only place one bet in each time slot.');
-            return res.status(400).json({ message: 'You can only place one bet in each time slot. 🛑' });
+            return res.status(400).send('You can only place one bet in each time slot.');
+            // return res.status(400).json({ message: 'You can only place one bet in each time slot. 🛑' });
         }
 
         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' });
