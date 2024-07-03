@@ -724,28 +724,30 @@ app.post('/updateWithdrawalStatus', auth, async (req, res) => {
 //     }
 // });
 
+
+
 app.post('/bet', auth, async (req, res) => {
     try {
         const { userId } = req.body;
         const user = await Register.findById(req.user._id);
 
         if (!user) {
-            return res.status(400).send('User not found');
+            return res.status(400).json({ message: 'User not found' });
         }
 
-        // Get the current date and time in UTC
+        // Get the current date and time
         const now = new Date();
-        const currentHour = now.getUTCHours(); // Use UTC hours for consistent comparison
+        const currentHour = now.getHours();
 
-        // Define the time slots in UTC
-        const morningStart = new Date(now.setUTCHours(10, 0, 0, 0)); // 10 AM UTC
-        const morningEnd = new Date(now.setUTCHours(13, 0, 0, 0)); // 1 PM UTC
-        const eveningStart = new Date(now.setUTCHours(18, 0, 0, 0)); // 6 PM UTC
-        const eveningEnd = new Date(now.setUTCHours(19, 0, 0, 0)); // 7 PM UTC
+        // Define the time slots
+        const morningStart = new Date(now.setHours(10, 0, 0, 0)); // 10 AM
+        const morningEnd = new Date(now.setHours(13, 0, 0, 0)); // 1 PM
+        const eveningStart = new Date(now.setHours(18, 0, 0, 0)); // 6 PM
+        const eveningEnd = new Date(now.setHours(19, 0, 0, 0)); // 7 PM
 
-        // Define the start and end of the current UTC day
-        const startOfDay = new Date(now.setUTCHours(0, 0, 0, 0));
-        const endOfDay = new Date(now.setUTCHours(23, 59, 59, 999));
+        // Define the start of the day to check bets made today
+        const startOfDay = new Date(now.setHours(0, 0, 0, 0));
+        const endOfDay = new Date(now.setHours(23, 59, 59, 999));
 
         // Check if the user has already placed a bet in the current time slot
         const existingBets = await Bet.find({
@@ -753,23 +755,14 @@ app.post('/bet', auth, async (req, res) => {
             createdAt: { $gte: startOfDay, $lte: endOfDay }
         });
 
-        // Filter bets to check if there is already a bet in the morning or evening slot
-        const hasMorningBet = existingBets.some(bet => {
-            const betCreatedAt = new Date(bet.createdAt).getTime();
-            return betCreatedAt >= morningStart.getTime() && betCreatedAt < morningEnd.getTime();
-        });
+        const hasMorningBet = existingBets.some(bet => bet.createdAt >= morningStart && bet.createdAt < morningEnd);
+        const hasEveningBet = existingBets.some(bet => bet.createdAt >= eveningStart && bet.createdAt < eveningEnd);
 
-        const hasEveningBet = existingBets.some(bet => {
-            const betCreatedAt = new Date(bet.createdAt).getTime();
-            return betCreatedAt >= eveningStart.getTime() && betCreatedAt < eveningEnd.getTime();
-        });
-
-        // Check if current bet attempt falls within restricted time slots
+        // Check if the current bet attempt falls within restricted time slots
         if ((currentHour >= 10 && currentHour < 13 && hasMorningBet) || (currentHour >= 18 && currentHour < 19 && hasEveningBet)) {
-            return res.status(400).send('You can only place one bet in each time slot.');
+            return res.status(400).json({ message: 'You can only place one bet in each time slot.' });
         }
 
-        // Proceed with calculating balance, profit, and saving the new bet
         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' });
         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' });
 
@@ -777,7 +770,7 @@ app.post('/bet', auth, async (req, res) => {
         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
         const balance = totalDeposits - totalWithdrawals;
 
-        const today = now.getUTCDay(); // Use UTC day
+        const today = new Date().getDay();
         const profitRates = {
             1: 2.20,
             2: 2.05,
@@ -787,14 +780,11 @@ app.post('/bet', auth, async (req, res) => {
             6: 2.05,
             0: 0.00
         };
-
         const profitRate = profitRates[today];
         const profit = balance * (profitRate / 100);
 
-        // Update user balance or any other relevant operations
         await user.save();
 
-        // Create and save the new bet
         const newBet = new Bet({
             userId: req.user._id,
             betUserId: userId,
@@ -804,7 +794,7 @@ app.post('/bet', auth, async (req, res) => {
         });
 
         await newBet.save();
-        res.status(201).redirect('/bet');
+        res.status(201).json({ message: 'success' });
     } catch (error) {
         console.error('Error during bet:', error);
         res.status(500).send('Error processing bet.');
