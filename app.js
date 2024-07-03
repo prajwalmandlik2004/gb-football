@@ -18,6 +18,11 @@ const fs = require('fs');
 const PORT = process.env.PORT || 3000;
 
 
+hbs.registerHelper('eq', function (a, b) {
+    return a === b;
+});
+
+
 // Ensure the uploads directory exists
 // const uploadsDir = path.join(__dirname, 'uploads');
 // if (!fs.existsSync(uploadsDir)) {
@@ -239,13 +244,33 @@ app.get('/transaction', auth, async (req, res) => {
 
         // Fetch referred users
         const referredUsers = await Register.find({ referrer: req.user.userid });
-        
-        res.render('transaction', { user, deposits, totalBetsProfit, totalBalance, withdrawals, bets, totalReferralIncome, totalTeamIncome, totalLevelIncome, totalTeam, referredUsers });
+
+        // Calculate total balance for each referred user
+        const referredUsersWithBalance = await Promise.all(referredUsers.map(async (referredUser) => {
+            const userDeposits = await Deposit.find({ userId: referredUser._id, status: 'Approved' });
+            const userWithdrawals = await Withdrawal.find({ userId: referredUser._id, status: 'Approved' });
+            const userBets = await Bet.find({ userId: referredUser._id });
+
+            const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
+            const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+            const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+            const userTotalBalance = userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit;
+
+            return {
+                ...referredUser._doc,
+                totalBalance: userTotalBalance,
+                status: userTotalBalance > 0 ? 'Active' : 'Not Active'
+            };
+        }));
+
+
+        res.render('transaction', { user, deposits, totalBetsProfit, totalBalance, withdrawals, bets, totalReferralIncome, totalTeamIncome, totalLevelIncome, totalTeam, referredUsers: referredUsersWithBalance });
     } catch (error) {
         console.error('Error fetching history :', error);
         res.status(500).send('Error fetching history .');
     }
 });
+
 
 
 
@@ -648,6 +673,57 @@ app.post('/updateWithdrawalStatus', auth, async (req, res) => {
 
 
 
+// app.post('/bet', auth, async (req, res) => {
+//     try {
+//         const { userId } = req.body;
+//         const user = await Register.findById(req.user._id);
+
+//         if (!user) {
+//             return res.status(400).send('User not found');
+//         }
+
+//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' });
+//         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' });
+
+//         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+//         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+//         const balance = totalDeposits - totalWithdrawals;
+
+//         const today = new Date().getDay();
+//         const profitRates = {
+//             1: 2.20,
+//             2: 2.05,
+//             3: 2.20,
+//             4: 1.27,
+//             5: 1.90,
+//             6: 2.05,
+//             0: 0.00
+//         };
+//         const profitRate = profitRates[today];
+//         const profit = balance * (profitRate / 100);
+
+//         // Corrected totalCoins calculation
+//         // const totalCoins = user.coins + 20; // Add 20 coins for each new bet
+//         // user.coins = totalCoins;
+//         await user.save();
+
+//         const newBet = new Bet({
+//             userId: req.user._id,
+//             betUserId: userId,
+//             balance: balance,
+//             profit: profit,
+//             status: 'Pending',
+//             // coins: 20 // Each bet adds 20 coins
+//         });
+
+//         await newBet.save();
+//         res.status(201).redirect('/bet');
+//     } catch (error) {
+//         console.error('Error during bet:', error);
+//         res.status(500).send('Error processing bet.');
+//     }
+// });
+
 app.post('/bet', auth, async (req, res) => {
     try {
         const { userId } = req.body;
@@ -655,6 +731,34 @@ app.post('/bet', auth, async (req, res) => {
 
         if (!user) {
             return res.status(400).send('User not found');
+        }
+
+        // Get the current date and time
+        const now = new Date();
+        const currentHour = now.getHours();
+
+        // Define the time slots
+        const morningStart = new Date(now.setHours(10, 0, 0, 0)); // 10 AM
+        const morningEnd = new Date(now.setHours(13, 0, 0, 0)); // 1 PM
+        const eveningStart = new Date(now.setHours(18, 0, 0, 0)); // 6 PM
+        const eveningEnd = new Date(now.setHours(19, 0, 0, 0)); // 7 PM
+
+        // Define the start of the day to check bets made today
+        const startOfDay = new Date(now.setHours(0, 0, 0, 0));
+        const endOfDay = new Date(now.setHours(23, 59, 59, 999));
+
+        // Check if the user has already placed a bet in the current time slot
+        const existingBets = await Bet.find({
+            userId: req.user._id,
+            createdAt: { $gte: startOfDay, $lte: endOfDay }
+        });
+
+        const hasMorningBet = existingBets.some(bet => bet.createdAt >= morningStart && bet.createdAt < morningEnd);
+        const hasEveningBet = existingBets.some(bet => bet.createdAt >= eveningStart && bet.createdAt < eveningEnd);
+
+        if ((currentHour >= 10 && currentHour < 13 && hasMorningBet) || (currentHour >= 18 && currentHour < 19 && hasEveningBet)) {
+            // return res.status(400).send('You can only place one bet in each time slot.');
+            return res.status(400).json({ message: 'You can only place one bet in each time slot. 🛑' });
         }
 
         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' });
@@ -677,9 +781,6 @@ app.post('/bet', auth, async (req, res) => {
         const profitRate = profitRates[today];
         const profit = balance * (profitRate / 100);
 
-        // Corrected totalCoins calculation
-        // const totalCoins = user.coins + 20; // Add 20 coins for each new bet
-        // user.coins = totalCoins;
         await user.save();
 
         const newBet = new Bet({
@@ -687,8 +788,7 @@ app.post('/bet', auth, async (req, res) => {
             betUserId: userId,
             balance: balance,
             profit: profit,
-            status: 'Pending',
-            // coins: 20 // Each bet adds 20 coins
+            status: 'Pending'
         });
 
         await newBet.save();
@@ -698,6 +798,7 @@ app.post('/bet', auth, async (req, res) => {
         res.status(500).send('Error processing bet.');
     }
 });
+
 
 
 

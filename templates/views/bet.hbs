@@ -43,12 +43,34 @@
             document.getElementById('profitDisplay').innerText = `Profit: ${profit}`;
         }
 
-        document.getElementById('betAllButton').addEventListener('click', () => {
+
+         document.getElementById('betAllButton').addEventListener('click', async () => {
             if (totalBalance === 0) {
                 alert('No account balance. Please deposit first.');
             } else if (profitRate !== 0) {
-                alert('Your bet has been successfully placed.✅');
-                document.getElementById('betForm').submit();
+                try {
+                    const userId = document.getElementById('userId').value;
+                    const response = await fetch('/bet', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userId }),
+                    });
+
+                    if (response.status === 400) {
+                        const result = await response.json();
+                        alert(result.message); // Show the alert message from the server
+                    } else if (response.status === 201) {
+                        alert('Your bet has been successfully placed.✅');
+                        window.location.href = '/bet';
+                    } else {
+                        alert('An error occurred. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error during bet:', error);
+                    alert('An error occurred. Please try again.');
+                }
             }
         });
 

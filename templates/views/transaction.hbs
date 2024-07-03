@@ -46,6 +46,20 @@
                 margin-bottom: 15px;
             }
         }
+
+        .status {
+            padding: 5px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .status-active {
+            background: green;
+        }
+
+        .status-not-active {
+            background: red;
+        }
     </style>
 </head>
 
@@ -74,6 +88,9 @@
                             <tr>
                                 <th>Serial No</th>
                                 <th>Name</th>
+                                <th>Contact</th>
+                                <th>Balance</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,11 +98,19 @@
                             <tr>
                                 <td>{{@index}}</td>
                                 <td>{{this.firstname}} {{this.lastname}}</td>
+                                <td>{{this.phone}}</td>
+                                <td>{{this.totalBalance}}</td>
+                                <td>
+                                    <p
+                                        class="status {{#if (eq this.status 'Active')}}status-active{{else}}status-not-active{{/if}}">
+                                        {{this.status}}
+                                    </p>
+                                </td>
                             </tr>
                             {{/each}}
                             {{#unless referredUsers.length}}
                             <tr>
-                                <td colspan="2">No referred users found</td>
+                                <td colspan="5">No referred users found</td>
                             </tr>
                             {{/unless}}
                         </tbody>
@@ -99,6 +124,5 @@
 </body>
 
 </html>
-
 
 
