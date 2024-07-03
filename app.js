@@ -783,8 +783,6 @@ app.post('/bet', auth, async (req, res) => {
         const profitRate = profitRates[today];
         const profit = balance * (profitRate / 100);
 
-        await user.save();
-
         const newBet = new Bet({
             userId: req.user._id,
             betUserId: userId,
