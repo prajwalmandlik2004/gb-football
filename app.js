@@ -162,7 +162,7 @@ app.get('/withdrawal', auth, async (req, res) => {
             };
         }));
 
-        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.05), 0);
+        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
 
 
         const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome;
@@ -212,7 +212,7 @@ app.get('/bet', auth, async (req, res) => {
             };
         }));
 
-        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.05), 0);
+        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
 
 
         const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome;
@@ -267,7 +267,7 @@ app.get('/userProfile', auth, async (req, res) => {
             };
         }));
 
-        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.05), 0);
+        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
 
 
         const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome;
@@ -318,7 +318,7 @@ app.get('/transaction', auth, async (req, res) => {
             };
         }));
 
-        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.05), 0);
+        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
         const totalTeam = referredUsers.length;
 
         res.render('transaction', {
@@ -368,7 +368,7 @@ app.get('/history', auth, async (req, res) => {
             };
         }));
 
-        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.05), 0);
+        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
 
 
         const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome;
