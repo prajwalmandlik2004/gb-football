@@ -165,7 +165,7 @@ app.get('/withdrawal', auth, async (req, res) => {
         const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
 
 
-        const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome;
+        const totalBalance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome).toFixed(2));
 
 
         // const totalCoins = bets.reduce((total, bet) => total + bet.coins, 0);
@@ -215,7 +215,7 @@ app.get('/bet', auth, async (req, res) => {
         const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
 
 
-        const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome;
+        const totalBalance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome).toFixed(2));
 
 
         // const totalCoins = bets.reduce((total, bet) => total + bet.coins, 0);
@@ -270,7 +270,7 @@ app.get('/userProfile', auth, async (req, res) => {
         const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
 
 
-        const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome;
+        const totalBalance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome).toFixed(2));
 
         // const totalCoins = bets.reduce((total, bet) => total + bet.coins, 0);
 
@@ -370,8 +370,7 @@ app.get('/history', auth, async (req, res) => {
 
         const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
 
-
-        const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome;
+        const totalBalance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome).toFixed(2));
 
 
         res.render('history', { user, deposits, totalBalance, withdrawals, bets });
