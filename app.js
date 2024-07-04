@@ -859,11 +859,11 @@ app.post('/bet', auth, async (req, res) => {
 
         const today = new Date().getDay();
         const profitRates = {
-            1: 2.20,
-            2: 2.05,
-            3: 2.20,
-            4: 1.27,
-            5: 1.90,
+            1: 2.10,
+            2: 2.20,
+            3: 2.05,
+            4: 2.05,
+            5: 2.10,
             6: 2.05,
             0: 0.00
         };
