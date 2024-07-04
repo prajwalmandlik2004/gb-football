@@ -824,10 +824,38 @@ app.post('/bet', auth, async (req, res) => {
 
         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' });
         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' });
+        const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
 
-        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount, 0);
+        const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
-        const balance = totalDeposits - totalWithdrawals;
+        const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+
+
+        // Fetch referred users
+        const referredUsers = await Register.find({ referrer: req.user.userid });
+
+        // Calculate total balance and referral income for each referred user
+        const referredUsersWithBalance = await Promise.all(referredUsers.map(async (referredUser) => {
+            const userDeposits = await Deposit.find({ userId: referredUser._id, status: 'Approved' });
+            const userWithdrawals = await Withdrawal.find({ userId: referredUser._id, status: 'Approved' });
+            const userBets = await Bet.find({ userId: referredUser._id });
+
+            const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
+            const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+            const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+            const userTotalBalance = userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit;
+
+            return {
+                ...referredUser._doc,
+                totalBalance: userTotalBalance,
+                status: userTotalBalance > 0 ? 'Active' : 'Not Active'
+            };
+        }));
+
+        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
+
+        const balance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome).toFixed(2));
+
 
         const today = new Date().getDay();
         const profitRates = {
