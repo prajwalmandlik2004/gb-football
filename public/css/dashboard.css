@@ -1,9 +1,9 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* background-color: #e0f7fa; */
-    background-image:  url('https://img.freepik.com/free-photo/view-soccer-player-field-with-grass_23-2150887564.jpg?t=st=1720168862~exp=1720172462~hmac=f203d5694fea063ec5509bff01e536dd09ecff6de7d5f6130f58fec6c5c9c60b&w=1060');
+    background-color: #e0f7fa;
+    /* background-image:  url('https://img.freepik.com/free-photo/view-soccer-player-field-with-grass_23-2150887564.jpg?t=st=1720168862~exp=1720172462~hmac=f203d5694fea063ec5509bff01e536dd09ecff6de7d5f6130f58fec6c5c9c60b&w=1060');
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: cover; */
     display: flex;
     justify-content: center;
     align-items: center;
