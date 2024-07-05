@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             imagePath = './images/5.png';
             break;
         case 5: // Friday
-            imagePath = './images/4.png';
+            imagePath = './images/match_one.png';
             break;
         case 6: // Saturday
             imagePath = './images/match_three.png';
