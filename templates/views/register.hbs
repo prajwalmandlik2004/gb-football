@@ -9,85 +9,96 @@
 </head>
 
 <body>
-    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <button type="submit" class="btnRegister">GB FOOTBALL</button>
-        <h3 class="register-heading">Registration Form</h3>
-        <form id="registrationForm" action="/register" method="post">
-            <div class="row register-form">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="First Name *" value="" name="firstname"
-                            required />
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Last Name *" value="" name="lastname"
-                            required />
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="User Id (GBXXXX) *" value="" name="userid"
-                            id="userid" required />
-                    </div>
-                    {{#if referrerId}}
-                    <input type="hidden" name="referrerId" value="{{referrerId}}">
-                    {{/if}}
-                    {{!-- <div class="form-group">
-                        <input type="text" class="form-control" placeholder="City *" value="" name="city" id="city"
-                            required />
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="State *" value="" name="state" id="state"
-                            required />
-                    </div> --}}
-                    <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Password *" value="" name="password"
-                            id="password" required />
-                    </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Confirm Password *" value=""
-                            name="confirmpassword" id="confirmpassword" required />
-                    </div>
-                    <div class="form-group">
-                        <div class="maxl">
-                            <label class="radio inline">
-                                <input type="radio" name="gender" value="male" checked>
-                                <span> Male </span>
-                            </label>
-                            <label class="radio inline">
-                                <input type="radio" name="gender" value="female">
-                                <span>Female </span>
-                            </label>
+    <div class="container">
+        <header class="header">
+            <img src="/images/football_two.png" alt="GB Football Logo" class="logo">
+            <h1 class="site-name">GB FOOTBALL</h1>
+        </header>
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <h3 class="register-heading">Create Your Account</h3>
+            <form id="registrationForm" action="/register" method="post">
+                <div class="row register-form">
+                    <div class="col-md-6">
+                        {{#if referrerId}}
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="referrerId"
+                                value="Referred By : {{referrerId}}">
                         </div>
+                        {{/if}}
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="First Name *" value="" name="firstname"
+                                required />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Last Name *" value="" name="lastname"
+                                required />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="User Id (GBXXXX) *" value=""
+                                name="userid" id="userid" required />
+                        </div>
+
+                        {{!-- <div class="form-group">
+                            <input type="text" class="form-control" placeholder="City *" value="" name="city" id="city"
+                                required />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="State *" value="" name="state"
+                                id="state" required />
+                        </div> --}}
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="Password *" value=""
+                                name="password" id="password" required />
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="Confirm Password *" value=""
+                                name="confirmpassword" id="confirmpassword" required />
+                        </div>
+
+                        {{!-- <div class="form-group">
+                            <div class="maxl">
+                                <label class="radio inline">
+                                    <input type="radio" name="gender" value="male" checked>
+                                    <span> Male </span>
+                                </label>
+                                <label class="radio inline">
+                                    <input type="radio" name="gender" value="female">
+                                    <span>Female </span>
+                                </label>
+                            </div>
+                        </div> --}}
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Your Email *" value="" name="email"
+                                required />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" minlength="10" maxlength="10" name="phone" class="form-control"
+                                placeholder="Your Phone *" value="" required />
+                        </div>
+                        {{!-- <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Enter Your Age *" value="" name="age"
+                                required />
+                        </div> --}}
+                        <div class="form-group">
+                            <input type="number" class="form-control" placeholder="Bank Account No *" value=""
+                                name="bank_account_no" id="bank_account_no" required />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Bank Name *" value="" name="bank_name"
+                                id="bank_name" required />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="IFSC Code *" value="" name="ifsc_code"
+                                id="ifsc_code" required />
+                        </div>
+                        <input type="submit" class="btnRegister" value="Register" />
+                        <p>Already have an account ? <a href="/login">Sign In</a></p>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <input type="email" class="form-control" placeholder="Your Email *" value="" name="email"
-                            required />
-                    </div>
-                    <div class="form-group">
-                        <input type="text" minlength="10" maxlength="10" name="phone" class="form-control"
-                            placeholder="Your Phone *" value="" required />
-                    </div>
-                    {{!-- <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Enter Your Age *" value="" name="age"
-                            required />
-                    </div> --}}
-                    <div class="form-group">
-                        <input type="number" class="form-control" placeholder="Bank Account No *" value=""
-                            name="bank_account_no" id="bank_account_no" required />
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Bank Name *" value="" name="bank_name"
-                            id="bank_name" required />
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="IFSC Code *" value="" name="ifsc_code"
-                            id="ifsc_code" required />
-                    </div>
-                    <input type="submit" class="btnRegister" value="Register" />
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
     <script>
         document.getElementById('registrationForm').addEventListener('submit', function (event) {
@@ -109,4 +120,3 @@
 </body>
 
 </html>
-

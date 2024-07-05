@@ -1,30 +1,61 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* background-color: #e0f7fa; */
+    background-image: url('https://img.freepik.com/free-photo/view-soccer-player-field-with-grass_23-2150887564.jpg?t=st=1720168862~exp=1720172462~hmac=f203d5694fea063ec5509bff01e536dd09ecff6de7d5f6130f58fec6c5c9c60b&w=1060');
+    background-repeat: no-repeat;
+    background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
     padding: 20px;
     box-sizing: border-box;
 }
 
-.tab-pane {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.container {
     width: 100%;
-    max-width: 800px;
+    max-width: 900px;
+    /* background: #fff; */
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
     box-sizing: border-box;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    /* background-color: #00796b; */
+    background-color: rgb(24, 179, 55);
+    padding: 15px 20px;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+}
+
+.site-name {
+    color: #fff;
+    font-size: 30px;
+    margin: 0;
+}
+
+.tab-pane {
+    padding: 20px;
 }
 
 .register-heading {
     text-align: center;
     margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
+    margin-top: -2px;
+    font-size: 25px;
+    /* color: #00796b; */
+    color: rgb(24, 179, 55);
+    font-weight: bold;
 }
 
 .register-form {
@@ -35,39 +66,64 @@ body {
 .col-md-6 {
     width: 100%;
     max-width: 50%;
-    padding: 0 10px;
+    padding: 0 15px;
     box-sizing: border-box;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .form-control {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f0fff9;
-    font-size: 14px;
+    padding: 12px 15px;
+    /* border: 1px solid #00796b; */
+    border: 1px solid rgb(24, 179, 55);
+    border-radius: 25px;
+    background-color: #e0f2f1;
+    font-size: 16px;
     box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    /* border-color: #004d40; */
+    border-color: rgb(24, 179, 55);
+    background-color: #ffffff;
+    outline: none;
+    /* box-shadow: 0 0 8px rgba(0, 121, 107, 0.5); */
+    box-shadow: 0 0 8px rgb(24, 179, 55);
 }
 
 .btnRegister {
     width: 100%;
-    padding: 10px;
-    background-color: #0aa247;
+    padding: 12px 15px;
+    /* background-color: #00796b; */
+    background-color: rgb(24, 179, 55);
     border: none;
     color: #fff;
-    font-size: 16px;
-    border-radius: 8px;
+    font-size: 18px;
+    border-radius: 25px;
     cursor: pointer;
     box-sizing: border-box;
     margin-top: 10px;
+    transition: background-color 0.3s ease;
 }
 
+p {
+    text-align: center;
+    font-size: 16px;
+}
+
+a {
+    text-decoration: none;
+    color : rgb(24, 179, 55);
+}
+
+
 .btnRegister:hover {
-    background-color: #0aa247;
+    /* background-color: #004d40; */
+    background-color: rgb(24, 179, 55);
 }
 
 .radio.inline {
@@ -88,11 +144,11 @@ body {
     }
 
     .form-control {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .btnRegister {
-        font-size: 14px;
+        font-size: 16px;
     }
 }
 
@@ -102,10 +158,12 @@ body {
     }
 
     .form-control {
-        padding: 8px;
+        padding: 10px;
     }
 
     .btnRegister {
-        padding: 8px;
+        padding: 10px;
     }
 }
+
+

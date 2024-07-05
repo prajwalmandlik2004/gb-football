@@ -9,26 +9,32 @@
 </head>
 
 <body>
-    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <button type="submit" class="btnRegister">GB FOOTBALL</button>
-        <h3 class="register-heading">Login Form</h3>
-        <form action="/login" method="post">
-            <div class="row register-form">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <input type="email" class="form-control" placeholder="Your Email *" value="" name="email"
-                            required />
+    <div class="container">
+        <header class="header">
+            <img src="/images/football_two.png" alt="GB Football Logo" class="logo">
+            <h1 class="site-name">GB FOOTBALL</h1>
+        </header>
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            {{!-- <button type="submit" class="btnRegister">GB FOOTBALL</button> --}}
+            <h3 class="register-heading">Login Form</h3>
+            <form action="/login" method="post">
+                <div class="row register-form">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Your Email *" value="" name="email"
+                                required />
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="Password *" value=""
+                                name="password" required />
+                        </div>
+                        <input type="submit" class="btnRegister" value="Sign In" />
                     </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Password *" value="" name="password"
-                            required />
-                    </div>
-                    <input type="submit" class="btnRegister" value="Sign In" />
                 </div>
+            </form>
+            <div class="create-account">
+                <p>Don't have an account? <a href="/register">Create an account</a></p>
             </div>
-        </form>
-        <div class="create-account">
-            <p>Don't have an account? <a href="/register">Create an account</a></p>
         </div>
     </div>
 </body>

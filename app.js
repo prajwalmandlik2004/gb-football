@@ -437,7 +437,7 @@ app.post('/register', async (req, res) => {
                 ifsc_code: req.body.ifsc_code,
                 phone: req.body.phone,
                 // age: req.body.age,
-                gender: req.body.gender,
+                // gender: req.body.gender,
                 password: req.body.password,
                 confirmpassword: req.body.confirmpassword,
             });

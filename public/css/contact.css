@@ -1,45 +1,80 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* background-color: #e0f7fa; */
+    background-image: url('https://img.freepik.com/free-photo/view-soccer-player-field-with-grass_23-2150887564.jpg?t=st=1720168862~exp=1720172462~hmac=f203d5694fea063ec5509bff01e536dd09ecff6de7d5f6130f58fec6c5c9c60b&w=1060');
+    background-repeat: no-repeat;
+    background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
     padding: 20px;
     box-sizing: border-box;
 }
 
-.contact-form {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.container {
     width: 100%;
-    max-width: 400px;
-    text-align: center;
+    max-width: 500px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
     box-sizing: border-box;
 }
 
-.contact-form h2 {
-    margin-bottom: 20px;
+.header {
+    display: flex;
+    align-items: center;
+    background-color: rgb(24, 179, 55);
+    padding: 15px 20px;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+}
+
+.site-name {
+    color: #fff;
     font-size: 24px;
+    margin: 0;
+}
+
+.contact-form {
+    padding: 20px;
+    text-align: center;
+}
+
+.contact-form h2 {
+    margin-top: -3px;
+    margin-bottom: 20px;
+    font-size: 26px;
+    color: rgb(24, 179, 55);
+    font-weight: bold;
+}
+
+.contact-form p {
+    margin-bottom: 20px;
+    font-size: 16px;
     color: #333;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f0fff9;
-    font-size: 14px;
+    padding: 12px 15px;
+    border: 1px solid rgb(24, 179, 55);
+    border-radius: 25px;
+    background-color: #e0f2f1;
+    font-size: 16px;
     box-sizing: border-box;
+    transition: all 0.3s ease;
 }
 
 .form-group input::placeholder,
@@ -47,35 +82,55 @@ body {
     color: #888;
 }
 
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: rgb(24, 179, 55);
+    background-color: #ffffff;
+    outline: none;
+    box-shadow: 0 0 8px rgb(24, 179, 55);
+}
+
 .submit-btn {
     width: 100%;
-    padding: 10px;
-    background-color: #0aa247;
+    padding: 12px 15px;
+    background-color: rgb(24, 179, 55);
     border: none;
     color: #fff;
-    font-size: 16px;
-    border-radius: 8px;
+    font-size: 18px;
+    border-radius: 25px;
     cursor: pointer;
     box-sizing: border-box;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
 }
 
 .submit-btn:hover {
-    background-color: #0aa247;
+    background-color: rgb(24, 179, 55);
 }
 
-@media (max-width: 600px) {
-    .contact-form {
+@media (max-width: 768px) {
+
+    .form-group input,
+    .form-group textarea {
+        font-size: 14px;
+    }
+
+    .submit-btn {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
         padding: 15px;
     }
 
     .form-group input,
     .form-group textarea {
-        padding: 8px;
-        font-size: 12px;
+        padding: 10px;
     }
 
     .submit-btn {
-        padding: 8px;
-        font-size: 14px;
+        padding: 10px;
     }
 }

@@ -8,16 +8,22 @@
 </head>
 
 <body>
-
-    <form id="betForm" action="/bet" method="POST">
-        <h3>Place Your Bet</h3>
-        <p>Account Balance : {{totalBalance}}</p>
-        <label for="userId">User ID (GBXXXX) :</label>
-        <input type="text" id="userId" name="userId" required>
-        <p id="profitDisplay">Profit : </p>
-        <button type="button" id="betAllButton">Bet All</button>
-    </form>
-
+    <div class="container">
+        <header class="header">
+            <img src="/images/football_two.png" alt="GB Football Logo" class="logo">
+            <h1 class="site-name">GB Football</h1>
+        </header>
+         <h3>Place Your Bet</h3>
+        <form id="betForm" action="/bet" method="POST">
+            <div class="form-group">
+                <p>Account Balance : {{totalBalance}}</p>
+                <label for="userId">User ID (GBXXXX) :</label>
+                <input type="text" id="userId" name="userId" required>
+            </div>
+            <p id="profitDisplay">Profit : </p>
+            <button type="button" id="betAllButton" class="btn">Bet All</button>
+        </form>
+    </div>
     <script>
         const profitRates = {
             1: 2.10,
@@ -77,5 +83,3 @@
 </body>
 
 </html>
-
-
