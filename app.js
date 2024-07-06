@@ -785,6 +785,108 @@ app.post('/updateWithdrawalStatus', auth, async (req, res) => {
 
 
 
+// app.post('/bet', auth, async (req, res) => {
+//     try {
+//         const { userId } = req.body;
+//         const user = await Register.findById(req.user._id);
+
+//         if (!user) {
+//             return res.status(400).json({ message: 'User not found' });
+//         }
+
+//         // Get the current date and time
+//         const now = new Date();
+//         const currentHour = now.getHours();
+
+//         // Define the time slots
+//         const morningStart = new Date(now.setHours(10, 0, 0, 0)); // 10 AM
+//         const morningEnd = new Date(now.setHours(13, 0, 0, 0)); // 1 PM
+//         const eveningStart = new Date(now.setHours(18, 0, 0, 0)); // 6 PM
+//         const eveningEnd = new Date(now.setHours(19, 0, 0, 0)); // 7 PM
+
+//         // Define the start of the day to check bets made today
+//         const startOfDay = new Date(now.setHours(0, 0, 0, 0));
+//         const endOfDay = new Date(now.setHours(23, 59, 59, 999));
+
+//         // Check if the user has already placed a bet in the current time slot
+//         const existingBets = await Bet.find({
+//             userId: req.user._id,
+//             createdAt: { $gte: startOfDay, $lte: endOfDay }
+//         });
+
+//         const hasMorningBet = existingBets.some(bet => bet.createdAt >= morningStart && bet.createdAt < morningEnd);
+//         const hasEveningBet = existingBets.some(bet => bet.createdAt >= eveningStart && bet.createdAt < eveningEnd);
+
+//         // Check if the current bet attempt falls within restricted time slots
+//         if ((currentHour >= 10 && currentHour < 13 && hasMorningBet) || (currentHour >= 18 && currentHour < 19 && hasEveningBet)) {
+//             return res.status(400).json({ message: 'You can only place one bet in each time slot.' });
+//         }
+
+//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' });
+//         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' });
+//         const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
+
+//         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
+//         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+//         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+
+
+//         // Fetch referred users
+//         const referredUsers = await Register.find({ referrer: req.user.userid });
+
+//         // Calculate total balance and referral income for each referred user
+//         const referredUsersWithBalance = await Promise.all(referredUsers.map(async (referredUser) => {
+//             const userDeposits = await Deposit.find({ userId: referredUser._id, status: 'Approved' });
+//             const userWithdrawals = await Withdrawal.find({ userId: referredUser._id, status: 'Approved' });
+//             const userBets = await Bet.find({ userId: referredUser._id });
+
+//             const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
+//             const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+//             const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+//             const userTotalBalance = userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit;
+
+//             return {
+//                 ...referredUser._doc,
+//                 totalBalance: userTotalBalance,
+//                 status: userTotalBalance > 0 ? 'Active' : 'Not Active'
+//             };
+//         }));
+
+//         const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
+
+//         const balance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome).toFixed(2));
+
+
+//         const today = new Date().getDay();
+//         const profitRates = {
+//             1: 2.10,
+//             2: 2.20,
+//             3: 2.05,
+//             4: 2.05,
+//             5: 2.10,
+//             6: 2.05,
+//             0: 0.00
+//         };
+//         const profitRate = profitRates[today];
+//         const profit = balance * (profitRate / 100);
+
+//         const newBet = new Bet({
+//             userId: req.user._id,
+//             betUserId: userId,
+//             balance: balance,
+//             profit: profit,
+//             status: 'Pending'
+//         });
+
+//         await newBet.save();
+//         res.status(201).json({ message: 'success' });
+//     } catch (error) {
+//         console.error('Error during bet:', error);
+//         res.status(500).send('Error processing bet.');
+//     }
+// });
+
+
 app.post('/bet', auth, async (req, res) => {
     try {
         const { userId } = req.body;
@@ -799,14 +901,21 @@ app.post('/bet', auth, async (req, res) => {
         const currentHour = now.getHours();
 
         // Define the time slots
-        const morningStart = new Date(now.setHours(10, 0, 0, 0)); // 10 AM
-        const morningEnd = new Date(now.setHours(13, 0, 0, 0)); // 1 PM
-        const eveningStart = new Date(now.setHours(18, 0, 0, 0)); // 6 PM
-        const eveningEnd = new Date(now.setHours(19, 0, 0, 0)); // 7 PM
+        const morningStart = new Date();
+        morningStart.setHours(10, 0, 0, 0); // 10 AM
+        const morningEnd = new Date();
+        morningEnd.setHours(13, 0, 0, 0); // 1 PM
+
+        const eveningStart = new Date();
+        eveningStart.setHours(18, 0, 0, 0); // 6 PM
+        const eveningEnd = new Date();
+        eveningEnd.setHours(19, 0, 0, 0); // 7 PM
 
         // Define the start of the day to check bets made today
-        const startOfDay = new Date(now.setHours(0, 0, 0, 0));
-        const endOfDay = new Date(now.setHours(23, 59, 59, 999));
+        const startOfDay = new Date(now);
+        startOfDay.setHours(0, 0, 0, 0);
+        const endOfDay = new Date(now);
+        endOfDay.setHours(23, 59, 59, 999);
 
         // Check if the user has already placed a bet in the current time slot
         const existingBets = await Bet.find({
@@ -829,7 +938,6 @@ app.post('/bet', auth, async (req, res) => {
         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
-
 
         // Fetch referred users
         const referredUsers = await Register.find({ referrer: req.user.userid });
@@ -855,7 +963,6 @@ app.post('/bet', auth, async (req, res) => {
         const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
 
         const balance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome).toFixed(2));
-
 
         const today = new Date().getDay();
         const profitRates = {
@@ -885,6 +992,9 @@ app.post('/bet', auth, async (req, res) => {
         res.status(500).send('Error processing bet.');
     }
 });
+
+
+
 
 
 
