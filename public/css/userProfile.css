@@ -1,30 +1,30 @@
-.emp-profile {
-    border-radius: 0.5rem;
-    background:white;
+/* Base styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
 }
 
+/* Container styling */
+.emp-profile {
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/* Profile image styling */
 .profile-img {
     text-align: center;
 }
 
-.back {
-    padding: 2px 15px 2px 15px;
-    border-radius: 10px;
-    background-color: rgb(6, 189, 6);
-    color: white;
-    border: 1px solid rgb(54, 68, 54);
-    text-decoration: none;
-    font-size: 20px;
-}
-
-.back:hover {
-    color: white;
-    text-decoration: none;
-}
-
 .profile-img img {
-    width: 70%;
-    height: 100%;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #007bff;
 }
 
 .profile-img .file {
@@ -36,6 +36,7 @@
     border-radius: 0;
     font-size: 15px;
     background: #212529b8;
+    color: white;
 }
 
 .profile-img .file input {
@@ -45,86 +46,167 @@
     top: 0;
 }
 
+/* Profile head styling */
+.profile-head {
+    text-align: center;
+}
+
 .profile-head h5 {
-    color: #333;
+    color: #007bff;
+    font-weight: bold;
+    margin-top: 10px;
 }
 
 .profile-head h6 {
-    color: rgb(6, 189, 6);
-
-}
-
-.profile-edit-btn {
-    border: none;
-    border-radius: 1.5rem;
-    width: 70%;
-    padding: 2%;
-    font-weight: 600;
     color: #6c757d;
-    cursor: pointer;
+    font-size: 14px;
 }
 
-.proile-rating {
-    font-size: 12px;
-    color: #818182;
-    margin-top: 5%;
-}
-
-.proile-rating span {
-    color: #495057;
-    font-size: 15px;
-    font-weight: 600;
-}
-
+/* Navigation tabs */
 .profile-head .nav-tabs {
-    margin-bottom: 5%;
+    margin-bottom: 20px;
 }
 
 .profile-head .nav-tabs .nav-link {
     font-weight: 600;
+    color: #007bff;
     border: none;
 }
 
 .profile-head .nav-tabs .nav-link.active {
     border: none;
-    border-bottom: 2px solid rgb(6, 189, 6);
+    border-bottom: 2px solid #007bff;
 }
 
+/* Profile work section */
 .profile-work {
-    padding: 14%;
-    margin-top: -15%;
+    background: #f7f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.profile-work p {
-    font-size: 15px;
-    color: black;
-    /* font-weight: bold; */
-    margin-top: 10%;
+.profile-work h5 {
+    font-size: 18px;
+    margin-bottom: 10px;
 }
 
-.balance {
-    color: white;
-    background: rgb(7, 185, 7);
+.profile-work .balance {
+    color: #fff;
+    background: #0bcb37;
     border-radius: 5px;
     padding: 10px;
+    margin: 10px 0;
+    font-size: 25px;
 }
 
 .profile-work a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #fff;
+    background: #007bff;
+    padding: 10px 20px;
+    border-radius: 5px;
     text-decoration: none;
-    color: #495057;
     font-weight: 600;
-    font-size: 14px;
 }
 
-.profile-work ul {
-    list-style: none;
+.profile-work a:hover {
+    background: #0056b3;
+}
+
+/* Profile details section */
+.profile-tab {
+    background: #f7f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
 }
 
 .profile-tab label {
     font-weight: 600;
+    color: #6c757d;
 }
 
 .profile-tab p {
     font-weight: 600;
-    color: #0062cc;
+    color: #007bff;
 }
+
+/* Button styling */
+.btn-primary {
+    background: #007bff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+    .emp-profile {
+        padding: 10px;
+    }
+
+    .profile-img img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-head h5 {
+        font-size: 20px;
+    }
+
+    .profile-head h6 {
+        font-size: 12px;
+    }
+
+    .profile-work {
+        padding: 10px;
+    }
+
+    .profile-tab {
+        padding: 10px;
+    }
+
+    .profile-tab .row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-tab .row div {
+        width: 100%;
+        /* text-align: center; */
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+
+
