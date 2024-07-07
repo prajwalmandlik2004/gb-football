@@ -8,80 +8,37 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <style>
-        .table-responsive {
-            margin-top: 20px;
-        }
-
-        h4 {
-            background-color: rgb(14, 193, 14);
-            color: white;
-            padding: 10px;
-        }
-
-        h5 {
-            background-color: rgb(224, 248, 224);
-            border-radius: 20px 10px 20px 10px;
-            padding: 10px;
-        }
-
-        h6 {
-            background-color: rgb(171, 224, 255);
-            padding: 10px;
-            border-radius: 10px;
-        }
-
-        .table th,
-        .table td {
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        th {
-            background-color: rgb(224, 248, 224);
-        }
-
-        @media (max-width: 768px) {
-            .table-responsive {
-                margin-bottom: 15px;
-            }
-        }
-
-        .status {
-            padding: 5px;
-            border-radius: 5px;
-            color: white;
-        }
-
-        .status-active {
-            background: green;
-        }
-
-        .status-not-active {
-            background: red;
-        }
-    </style>
+    <link rel="stylesheet" href="css/transaction.css">
 </head>
 
 <body>
     <div class="container">
-        <div class="row mt-4">
-            <div class="col-md-12 text-center">
-                <h5>Name: {{user.firstname}} {{user.lastname}}</h5>
-                <h5>User Id: {{user.userid}}</h5>
+        <div class="row mt-4 text-center">
+            <div class="col-md-12">
+                <div class="user-info">
+                    <h5>{{user.firstname}} {{user.lastname}} - {{user.userid}} </h5>
+                </div>
                 <p>See Your Income Below</p>
-                <h6>
-                    Trading Income: {{totalBetsProfit}}<br><br>
-                    Referral Income: {{totalReferralIncome}}<br><br>
-                    Team Salary Income: {{totalTeamIncome}}<br><br>
-                    Level Income: {{totalLevelIncome}}
-                </h6>
+                <div class="income-boxes">
+                    <div class="income-box trading-income">
+                        Trading Income: {{totalBetsProfit}}
+                    </div>
+                    <div class="income-box referral-income">
+                        Referral Income: {{totalReferralIncome}}
+                    </div>
+                    <div class="income-box team-salary-income">
+                        Team Salary Income: {{totalTeamIncome}}
+                    </div>
+                    <div class="income-box level-income">
+                        Level Income: {{totalLevelIncome}}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row mt-4">
             <div class="col-md-12">
-                <h4>Team History</h4>
-                <h4>Your Team: {{totalTeam}} People</h4>
+                <h4 class="team-history-header">Team History</h4>
+                <h4 class="team-size">Your Team: {{totalTeam}} People</h4>
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
@@ -124,5 +81,3 @@
 </body>
 
 </html>
-
-

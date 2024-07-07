@@ -1,0 +1,115 @@
+/* General Styles */
+.container {
+    max-width: 1200px;
+    margin:0 auto;
+    padding: 2rem;
+    background: #f2fdf3;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* User Info */
+.user-info {
+    margin-bottom: 1rem;
+    margin-top: -2rem;
+    background-color: #2293ef;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-info h5 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight:600;
+    color: white;
+}
+
+/* Income Boxes */
+.income-boxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.income-box {
+    flex: 1 1 calc(25% - 1rem);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.trading-income {
+    background-color: #1db9ce;
+}
+
+.referral-income {
+    background-color: #29bf4c;
+}
+
+.team-salary-income {
+    background-color: #ffd207;
+    color: #333;
+}
+
+.level-income {
+    background-color: #ee1c3f;
+}
+
+/* Team History */
+.team-history-header,
+.team-size {
+    background-color: #0ec10e;
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    text-align: center;
+}
+
+.table-responsive {
+    margin-top: 1rem;
+}
+
+.table th,
+.table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+th {
+    background-color: #e0f8e0;
+}
+
+.status {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    color: #fff;
+}
+
+.status-active {
+    background: green;
+}
+
+.status-not-active {
+    background: red;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .income-boxes {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .income-box {
+        flex: 1 1 100%;
+    }
+}
+
+

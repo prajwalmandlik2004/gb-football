@@ -24,7 +24,7 @@ const playerSchema = new mongoose.Schema({
     },
     userid: {
         type: String,
-        required: true,
+        // required: true,
         unique: true,
         validate(value) {
             if (!/^GB\d{4}$/.test(value)) {
@@ -52,17 +52,17 @@ const playerSchema = new mongoose.Schema({
     // },
     bank_account_no: {
         type: Number,
-        required: true,
-        unique: true
+        // required: true,
+        // unique: true,
     },
     bank_name: {
         type: String,
-        required: true
+        // required: true
     },
     ifsc_code: {
         type: String,
-        required: true,
-        unique: true
+        // required: true,
+        // unique: true,
     },
     // gender: {
     //     type: String,
