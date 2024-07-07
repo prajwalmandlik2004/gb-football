@@ -23,13 +23,6 @@
 </head>
 
 <body class="bg">
-    <div id="loading-area" class="loading-page-1">
-        <div class="spinner">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="8" cy="8" r="7" stroke-width="1" />
-            </svg>
-        </div>
-    </div>
     <div class="page-wraper">
 
         <header class="site-header header-style-6 dark mo-left ">
@@ -86,7 +79,8 @@
                             <div class="header-nav navbar-collapse collapse justify-content-end" id="navbarNavDropdown">
                                 <ul class=" nav navbar-nav">
                                     <li class="active"> <a href="/">Home</a></li>
-                                    {{!-- <li> <a href="#about"><span style="color : black;">About Us</span></a></li> --}}
+                                    {{!-- <li> <a href="#about"><span style="color : black;">About Us</span></a></li>
+                                    --}}
                                     <li> <a href="#games"><span style="color : black;">Games</span></a></li>
                                     <li> <a href="/contact"><span style="color : black;">Contact Us</span></a>
                                     </li>
@@ -109,12 +103,10 @@
                     </div>
                 </div>
             </div>
-
         </header>
 
 
         <div class="page-content">
-
             <div class="main-slider style-two default-banner">
                 <div class="tp-banner-container">
                     <div class="tp-banner">
@@ -125,7 +117,6 @@
                             <div id="slider_01" class="rev_slider fullwidthabanner" style="display:none;"
                                 data-version="5.3.0.2">
                                 <ul>
-
                                     <li data-index="rs-100" data-transition="parallaxvertical" data-slotamount="default"
                                         data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default"
                                         data-easeout="default" data-masterspeed="default"
@@ -133,10 +124,13 @@
                                         data-fstransition="fade" data-fsmasterspeed="1500" data-fsslotamount="7"
                                         data-saveperformance="off">
 
-                                        <img src="images/main-slider/football_one.jpg" alt
+                                        {{!-- <img src="images/main-slider/main_ground.jpg" alt
                                             data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat"
-                                            data-bgparallax="10" class="rev-slidebg" data-no-retina>
+                                            data-bgparallax="10" class="rev-slidebg" data-no-retina> --}}
 
+                                        {{!-- Background Image --}}
+
+                                        <div class="background"></div>
 
                                         <div class="tp-caption Newspaper-Subtitle  text-primary tp-resizeme"
                                             id="slide-100-layer-1" data-x="['left','left','left','left']"
@@ -182,9 +176,13 @@
                                             data-paddingleft="[0,0,0,0]"
                                             style="z-index: 6; white-space: normal;text-transform:left; line-height:80px; color:#fff; font-family:roboto">
                                             We Provide The Best And Highest Odds For You To Gain More
+                                            <br>
+                                            <a href="/register" target="blank" class="register-button">Register Now
+                                            </a>
+
                                         </div>
 
-                                        <div class="tp-caption" id="slide-100-layer-4"
+                                        {{!-- <div class="tp-caption" id="slide-100-layer-4"
                                             data-x="['left','left','left','left']" data-hoffset="['53','53','50','30']"
                                             data-y="['top','top','top','top']" data-voffset="['350','550','500','510']"
                                             data-width="none" data-height="none" data-whitespace="nowrap"
@@ -194,27 +192,24 @@
                                             data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]"
                                             data-paddingleft="[0,0,0,0]"
                                             style="z-index: 8; white-space: nowrap; background-color:rgba(0, 0, 0, 0) !important;">
-                                            <a style="background-color: #5BBCFF;" href="/register" target="blank"
-                                                class="site-button m-r15">Register Now
-                                            </a>
-                                        </div>
+                                        </div> --}}
 
                                     </li>
-
                                 </ul>
-                                <div class="tp-bannertimer tp-bottom bg-primary"></div>
+                                {{!-- <div class="tp-bannertimer tp-bottom bg-primary"></div> --}}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <section>
+
+            <section class="section-below">
                 <div class="telegram">
                     <a target="_blank" href="https://t.me/gbfootball11">
                         <button class="but1">Join Telegram</button>
                     </a>
-                    <a target="_blank" href="https://whatsapp.com/channel/0029Vaiy94CDTkK1NkEgW02Q">
+                    <a target="_blank" href="https://chat.whatsapp.com/DCyquDECT0kLmyMLegRJ1o">
                         <button class="but2">Join Whatsapp</button>
                     </a>
                 </div>
@@ -239,6 +234,7 @@
                 {{else}}
                 {{/if}}
             </section>
+
 
             <script>
                 function copyReferralLink() {

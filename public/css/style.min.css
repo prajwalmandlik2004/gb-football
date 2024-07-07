@@ -4891,20 +4891,50 @@ blockquote:before {
     cursor: default
 }
 
+/* Register Button */
+
+.register-button{
+    background-color: #3ca8e2;
+    color : white;
+    padding:8px;
+    font-size: 18px;
+    font-weight: 500;
+    border-radius: 10px;
+}
+
+/* Background */
+
+.section-below{
+    margin-top: -40px;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 95%;
+    background: url("/images/football_real.png") no-repeat center center;
+    background-size: cover;
+    filter: saturate(2);
+    z-index: -1;
+}
+
 /* User Profile */
 
-.userProfile{
-    font-size: 20px;
+.userProfile {
+    font-size: 18px;
     font-weight: bold;
-    color : white;
-    background: rgb(11, 192, 11);
-    padding : 5px;
-    border-radius: 5px;
+    color: white;
+    background: rgb(11, 225, 11);
+    padding: 8px;
+    border-radius: 15px;
 }
 
-.userProfile:hover{
-    color : white;
+.userProfile:hover {
+    color: white;
 }
+
 
 
 /* owl dots button */
@@ -5717,7 +5747,7 @@ blockquote:before {
 
 .offers {
     font-size: 18px;
-    background: linear-gradient(135deg , rgb(15, 212, 15) , rgb(71, 172, 249));
+    background: linear-gradient(135deg, rgb(15, 212, 15), rgb(71, 172, 249));
     width: 100%;
     border-radius: 20px;
     padding: 15px;
@@ -6437,12 +6467,12 @@ ol.comment-list li.comment .comment-respond .comment-form p {
     margin: 0 auto;
 }
 
-.image-content{
-    display : inline-block;
+.image-content {
+    display: inline-block;
     background: #13aef1;
-    padding :5px 20px 5px 20px;
+    padding: 5px 20px 5px 20px;
     border-radius: 10px;
-    color : white;
+    color: white;
 }
 
 /*widget categories*/
@@ -11470,6 +11500,7 @@ ol.commentlist li .star-rating {
 /* Support and Buy Button END */
 
 /* Telegram Channel and Download App */
+
 
 .telegram {
     margin-top: 30px;
