@@ -4775,12 +4775,12 @@ blockquote:before {
 
 /*==>rs slider==*/
 
-.tp-caption .font-weight-300 {
-    font-weight: 300;
-}
-
 .tp-caption .font-weight-400 {
     font-weight: 400;
+}
+
+.tp-caption .font-weight-500 {
+    font-weight: 500;
 }
 
 .tp-caption .font-weight-500 {
@@ -4918,11 +4918,10 @@ blockquote:before {
 
 @media (max-width: 767px) {
     .background {
-        height: 70%;
-
+        height: 73%;
     }
-}
 
+}
 
 
 /* User Profile */
@@ -5045,6 +5044,11 @@ blockquote:before {
 }
 
 /*owl button top to center */
+
+.owl-nav {
+    display: none;
+}
+
 
 .owl-btn-top-c .owl-nav {
     text-align: center;
@@ -6474,7 +6478,7 @@ ol.comment-list li.comment .comment-respond .comment-form p {
 
 .image-content {
     display: inline-block;
-    background: #13aef1;
+    background: #1ed869;
     padding: 5px 20px 5px 20px;
     border-radius: 10px;
     color: white;
@@ -11513,7 +11517,7 @@ ol.commentlist li .star-rating {
 
 
 .telegram {
-    margin-top: 20px;
+    /* margin-top: 20px; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11541,27 +11545,29 @@ ol.commentlist li .star-rating {
 
 .community{
     text-align: center;
-    background: linear-gradient(90deg, #28a745 0%, #007bff 100%);
     padding : 10px;
-    color : white;
-
+    /* color : white; */
 }
 
 .depo{
     text-align: center;
+    padding : 10px;
+    /* color : white; */
 }
 
 .refer{
     text-align: center;
+    padding : 10px;
+    /* color : white; */
 }
 
 
-/* .just{
-    background-color: #D6EFD8;
-    border-radius: 10px;
+.just{
+    background-color: white;
     width: 100%;
+    padding:10px;
     margin : 0 auto;
-} */
+}
 
 
 .input {
@@ -11569,7 +11575,6 @@ ol.commentlist li .star-rating {
     justify-content: center;
     align-items: center;
 }
-
 
 
 
