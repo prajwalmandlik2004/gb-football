@@ -16,7 +16,7 @@
         <div class="row mt-4 text-center">
             <div class="col-md-12">
                 <div class="user-info">
-                    <h5>{{user.firstname}} {{user.lastname}} - {{user.userid}} </h5>
+                    <h5>{{user.firstname}} {{user.lastname}} - {{user.userid}}</h5>
                 </div>
                 <p>See Your Income Below</p>
                 <div class="income-boxes">
@@ -48,6 +48,7 @@
                                 <th>Contact</th>
                                 <th>Balance</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,11 +64,23 @@
                                         {{this.status}}
                                     </p>
                                 </td>
+                                <td>
+                                    <form action="/transaction/level" method="GET" style="display:inline;">
+                                        <input type="hidden" name="userId" value="{{this.userid}}">
+                                        <input type="hidden" name="level" value="2">
+                                        <button type="submit" class="btn btn-primary mt-2">Level 2</button>
+                                    </form>
+                                    <form action="/transaction/level" method="GET" style="display:inline;">
+                                        <input type="hidden" name="userId" value="{{this.userid}}">
+                                        <input type="hidden" name="level" value="3">
+                                        <button type="submit" class="btn btn-secondary mt-2">Level 3</button>
+                                    </form>
+                                </td>
                             </tr>
                             {{/each}}
                             {{#unless referredUsers.length}}
                             <tr>
-                                <td colspan="5">No referred users found</td>
+                                <td colspan="6">No referred users found</td>
                             </tr>
                             {{/unless}}
                         </tbody>
@@ -81,3 +94,5 @@
 </body>
 
 </html>
+
+
