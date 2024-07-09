@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Betting Dashboard</title>
+    <link rel="stylesheet" href="./css/betting_dashboard.css">
+</head>
+
+<body>
+    <div class="background"></div>
+    <div class="betting-dashboard">
+        {{#each bets}}
+        <div class="betting-card">
+            <div class="score">{{this.score}}</div>
+            <div class="details">
+                <div class="profit">{{this.profit}}</div>
+                <div class="description">Make a profit</div>
+            </div>
+            <a href="/bet"><button class="bet-button">Place a bet</button></a>
+        </div>
+        {{/each}}
+    </div>
+</body>
+
+</html>
+
+

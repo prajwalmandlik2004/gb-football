@@ -133,7 +133,7 @@ h4 a:hover,
 h5 a:hover,
 h6 a:hover,
 .widget_rss ul .rss-date {
-    color: white;
+    color: #5BBCFF;
 }
 
 .navbar-toggle,
@@ -187,7 +187,7 @@ a.text-primary:hover {
 .text-primary,
 .site-footer .footer-bottom a:hover,
 footer .widget_services ul li a:hover {
-    color: white !important
+    color: #5BBCFF !important
 }
 
 .bg-primary {

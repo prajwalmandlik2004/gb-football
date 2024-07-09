@@ -23,6 +23,21 @@ hbs.registerHelper('eq', function (a, b) {
 });
 
 
+const betsData = {
+    bets: [
+        { score: "0 - 0", profit: "1.07%" },
+        { score: "0 - 1", profit: "4.79%" },
+        { score: "0 - 2", profit: "1.35%" },
+        { score: "0 - 3", profit: "1.41%" },
+        { score: "1 - 0", profit: "6.52%" },
+        { score: "1 - 1", profit: "10.97%" },
+        { score: "Other", profit: "4.00%" },
+        { score: "1 - 2", profit: "3.35%" },
+        { score: "1 - 3", profit: "1.13%" }
+    ]
+};
+
+
 // Ensure the uploads directory exists
 // const uploadsDir = path.join(__dirname, 'uploads');
 // if (!fs.existsSync(uploadsDir)) {
@@ -122,6 +137,10 @@ app.get('/contact', (req, res) => {
 
 app.get('/dashboard', (req, res) => {
     res.render("dashboard", { user: req.user });
+});
+
+app.get('/betting_dashboard', (req, res) => {
+    res.render("betting_dashboard", betsData );
 });
 
 app.get('/error', (req, res) => {

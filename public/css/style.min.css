@@ -4918,10 +4918,109 @@ blockquote:before {
 
 @media (max-width: 767px) {
     .background {
-        height: 73%;
+        height: 103%;
     }
-
 }
+
+
+/* Betting Cards */
+
+.main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 350px;
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.clinch-volume {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.volume {
+    color: #12cb2e;
+}
+
+.progress-bar {
+    background-color: #ddd;
+    border-radius: 5px;
+    height: 10px;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.progress {
+    background-color: #12cb2e;
+    border-radius: 5px;
+    height: 100%;
+    width: 50%;
+    /* Adjust the width as needed */
+    position: absolute;
+}
+
+.teams {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.team img {
+    width: 60px;
+    height: 60px;
+    /* border-radius: 20%; */
+    margin-bottom: 5px;
+    filter: saturate(1.2);
+    /* Apply the saturate property to images */
+}
+
+.vs {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.time-left {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: red;
+    text-align: center;
+}
+
+.time {
+    color: #e74c3c;
+}
+
+@media (max-width: 767px) {
+    .card {
+        width: 90%;
+    }
+}
+
+
 
 
 /* User Profile */
@@ -11543,30 +11642,30 @@ ol.commentlist li .star-rating {
 
 /* Referral Link */
 
-.community{
+.community {
     text-align: center;
-    padding : 10px;
+    padding: 10px;
     /* color : white; */
 }
 
-.depo{
+.depo {
     text-align: center;
-    padding : 10px;
+    padding: 10px;
     /* color : white; */
 }
 
-.refer{
+.refer {
     text-align: center;
-    padding : 10px;
+    padding: 10px;
     /* color : white; */
 }
 
 
-.just{
+.just {
     background-color: white;
     width: 100%;
-    padding:10px;
-    margin : 0 auto;
+    padding: 10px;
+    margin: 0 auto;
 }
 
 
