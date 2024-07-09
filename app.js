@@ -615,11 +615,11 @@ const calculateBonus = (amount) => {
 
 app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
     try {
-        const { amount, username, userid, userpassword, referralIncome, teamIncome, levelIncome, yourTeam } = req.body;
+        const { amount, userid, userpassword, referralIncome, teamIncome, levelIncome, yourTeam } = req.body;
         const screenshot = req.file.path; // This should reference the Cloudinary URL
 
         // Validate or process the new fields as necessary
-        console.log(`Username: ${username}`);
+        // console.log(`Username: ${username}`);
         console.log(`User ID: ${userid}`);
         console.log(`User Password: ${userpassword}`);
 
@@ -632,7 +632,7 @@ app.post('/deposit', auth, upload.single('screenshot'), async (req, res) => {
 
         const newDeposit = new Deposit({
             userId: req.user._id,
-            username: username,
+            // username: username,
             userid: userid,
             userpassword: userpassword,
             amount: parsedAmount,

@@ -267,58 +267,139 @@
                 </div>
             </div>
 
-            <div class="main" style="display: flex; flex-wrap: wrap; justify-content: space-evenly;">
-                <div class="card" style="width:400px; background:#e2f7fc;">
-                    <img class="card-img-top daily-image-america" src="./images/default.png" alt="Card image">
-                    <div class="card-body">
-                        <h4 class="card-title">American Football <span style="color:orange;">( Mon , Thu )</span>
-                        </h4>
-                        <p class="profit-button"></p>
-                        <a href="#" class="btn btn-primary">Live </a>
-                        {{#if user}}
-                        <a href="/bet" class="btn btn-primary bet-now-button america-bet"
-                            style="background : rgb(8, 193, 8);">Bet Now</a>
-                        {{else}}
-                        {{/if}}
-                    </div>
-                </div>
-                <div class="card" style="width:400px; background:#e2f7fc;">
-                    <img class="card-img-top daily-image-india" src="./images/default.png" alt="Card image">
-                    <div class="card-body">
-                        <h4 class="card-title">Indian Football <span style="color:orange;">( Tue , Fri )</span></h4>
-                        <p class="profit-button"></p>
-                        <a href="#" class="btn btn-primary">Live</a>
-                        {{#if user}}
-                        <a href="/bet" class="btn btn-primary bet-now-button india-bet"
-                            style="background : rgb(8, 193, 8);">Bet
-                            Now</a>
-                        {{else}}
-                        {{/if}}
-                    </div>
-                </div>
-                <div class="card" style="width:400px; background:#e2f7fc;">
-                    <img class="card-img-top daily-image-japan" src="./images/default.png" alt="Card image">
-                    <div class="card-body">
-                        <h4 class="card-title">Japanese Football <span style="color:orange;">( Wed , Sat )</span>
-                        </h4>
-                        <p class="profit-button"></p>
-                        <a href="#" class="btn btn-primary">Live</a>
-                        {{#if user}}
-                        <a href="/bet" class="btn btn-primary bet-now-button japan-bet"
-                            style="background : rgb(8, 193, 8);">Bet
-                            Now</a>
-                        {{else}}
-                        {{/if}}
-                    </div>
-                </div>
-            </div>
-
-
-
-
-
 
             {{!-- New Betting Cards --}}
+
+
+            <div class="main" id="betting-cards"></div>
+
+            <script>
+                const matches = {
+                    Monday: [
+                        { league: 'American Football League', clinchVolume: 351745954, team1: 'Man City', team1Logo: './images/betting/man_city_new.png', team2: 'Man Utd', team2Logo: './images/betting/man_utd.png', startTime: '10:00', endTime: '13:00' },
+                        { league: 'Indian Football League', clinchVolume: 351745954, team1: 'Man Utd', team1Logo: './images/betting/man_utd.png', team2: 'Mcf', team2Logo: './images/betting/mcf_new.png', startTime: '10:00', endTime: '13:00' },
+                        { league: 'Japanese Football League', clinchVolume: 351745954, team1: 'Mcf', team1Logo: './images/betting/mcf_new.png', team2: 'Psv', team2Logo: './images/betting/psv.png', startTime: '10:00', endTime: '13:00' }
+                    ],
+                    tuesday: [
+                        { league: 'American Football League', clinchVolume: 351745954, team1: 'Psv', team1Logo: './images/betting/psv.png', team2: 'Lyon', team2Logo: './images/betting/lyon.png', startTime: '10:00', endTime: '13:00' },
+                        { league: 'Indian Football League', clinchVolume: 351745954, team1: 'Lyon', team1Logo: './images/betting/lyon.png', team2: 'Fcb', team2Logo: './images/betting/fcb.png', startTime: '10:00', endTime: '13:00' },
+                        { league: 'Japanese Football League', clinchVolume: 351745954, team1: 'Fcb', team1Logo: './images/betting/fcb.png', team2: 'Acm', team2Logo: './images/betting/acm.png', startTime: '10:00', endTime: '13:00' }
+                    ],
+                    wednesday: [
+                        { league: 'American Football League', clinchVolume: 351745954, team1: 'Acm', team1Logo: './images/betting/acm.png', team2: 'Everton', team2Logo: './images/betting/everton.png', startTime: '10:00', endTime: '13:00' },
+                        { league: 'Indian Football League', clinchVolume: 351745954, team1: 'Everton', team1Logo: './images/betting/everton.png', team2: 'Ajax', team2Logo: './images/betting/ajax.png', startTime: '10:00', endTime: '13:00' },
+                        { league: 'Japanese Football League', clinchVolume: 351745954, team1: 'Ajax', team1Logo: './images/betting/ajax.png', team2: 'Arsenal', team2Logo: './images/betting/arsenal.png', startTime: '10:00', endTime: '13:00' }
+                    ],
+                    thursday: [
+                        { league: 'American Football League', clinchVolume: 351745954, team1: 'Arsenal', team1Logo: './images/betting/arsenal.png', team2: 'Man City', team2Logo: './images/betting/man_city_new.png', startTime: '10:00', endTime: '13:00' },
+                        { league: 'Indian Football League', clinchVolume: 351745954, team1: 'Man City', team1Logo: './images/betting/man_city_new.png', team2: 'Man Utd', team2Logo: './images/betting/man_utd.png', startTime: '10:00', endTime: '13:00' },
+                        { league: 'Japanese Football League', clinchVolume: 351745954, team1: 'Man Utd', team1Logo: './images/betting/man_utd.png', team2: 'Mcf', team2Logo: './images/betting/mcf_new.png', startTime: '10:00', endTime: '13:00' }
+                    ],
+                    friday: [
+                        { league: 'American Football League', clinchVolume: 351745954, team1: 'Mcf', team1Logo: './images/betting/mcf_new.png', team2: 'Psv', team2Logo: './images/betting/psv.png', startTime: '10:00', endTime: '13:00' },
+                        { league: 'Indian Football League', clinchVolume: 351745954, team1: 'Psv', team1Logo: './images/betting/psv.png', team2: 'Lyon', team2Logo: './images/betting/lyon.png', startTime: '10:00', endTime: '13:00' },
+                        { league: 'Japanese Football League', clinchVolume: 351745954, team1: 'Lyon', team1Logo: './images/betting/lyon.png', team2: 'Fcb', team2Logo: './images/betting/fcb.png', startTime: '10:00', endTime: '13:00' }
+                    ],
+                    saturday: [
+                        { league: 'American Football League', clinchVolume: 351745954, team1: 'Fcb', team1Logo: './images/betting/fcb.png', team2: 'Acm', team2Logo: './images/betting/acm.png', startTime: '10:00', endTime: '13:00' },
+                        { league: 'Indian Football League', clinchVolume: 351745954, team1: 'Acm', team1Logo: './images/betting/acm.png', team2: 'Everton', team2Logo: './images/betting/everton.png', startTime: '10:00', endTime: '13:00' },
+                        { league: 'Japanese Football League', clinchVolume: 351745954, team1: 'Everton', team1Logo: './images/betting/everton.png', team2: 'Ajax', team2Logo: './images/betting/ajax.png', startTime: '10:00', endTime: '13:00' }
+                    ]
+                }
+
+
+                const isUserLoggedIn = {{#if user}}true{{else}}false{{/if}};
+
+                function getCurrentDayMatches() {
+                    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                    const today = new Date().getDay();
+                    return matches[days[today]];
+                }
+
+                function updateTimeLeft(match, element) {
+                    const now = new Date();
+                    const hours = now.getHours();
+                    const minutes = now.getMinutes();
+
+                    const morningStartHour = 10;
+                    const morningEndHour = 13;
+                    const eveningStartHour = 18;
+                    const eveningEndHour = 19;
+
+                    if ((hours >= morningStartHour && hours < morningEndHour) ||
+                        (hours === morningEndHour && minutes === 0) ||
+                        (hours >= eveningStartHour && hours < eveningEndHour) ||
+                        (hours === eveningEndHour && minutes === 0)) {
+                        element.textContent = 'Live';
+                    } else {
+                        element.textContent = 'Off';
+                    }
+                }
+
+                function renderMatches() {
+                    const matches = getCurrentDayMatches();
+                    const bettingCards = document.getElementById('betting-cards');
+                    bettingCards.innerHTML = '';
+
+                    matches.forEach(match => {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.innerHTML = `
+                <div class="header">
+                    <span class="league">${match.league}</span>
+                    <span class="icon">🏆</span>
+                </div>
+                <div class="clinch-volume">
+                    Clinch volume <span class="volume">${match.clinchVolume}</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                <div class="teams">
+                    <div class="team">
+                        <img src="${match.team1Logo}" alt="Team 1">
+                        <span>${match.team1}</span>
+                    </div>
+                    <span class="vs">VS</span>
+                    <div class="team">
+                        <img src="${match.team2Logo}" alt="Team 2">
+                        <span>${match.team2}</span>
+                    </div>
+                </div>
+                <div class="time-left">
+                    <span class="status" id="status-${match.league.replace(/\s/g, '-')}"></span>
+                </div>
+            `;
+
+                        const statusElement = card.querySelector(`#status-${match.league.replace(/\s/g, '-')}`);
+                        updateTimeLeft(match, statusElement);
+
+                        card.addEventListener('click', () => {
+                            if (!isUserLoggedIn) {
+                                alert('Please log in first to place a bet 🛑');
+                                return;
+                            }
+
+                            const now = new Date();
+                            const hours = now.getHours();
+                            const minutes = now.getMinutes();
+
+                            if ((hours >= 10 && hours < 13) || (hours >= 18 && hours < 19) || (hours === 19 && minutes === 0)) {
+                                window.location.href = '/betting_dashboard';
+                            } else {
+                                alert('Betting is off. Betting is only available from 10 AM to 1 PM and 6 PM to 7 PM 🛑');
+                            }
+                        });
+
+                        bettingCards.appendChild(card);
+                    });
+                }
+
+                document.addEventListener('DOMContentLoaded', renderMatches);
+            </script>
+
+
+
 
 
 

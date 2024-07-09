@@ -6,10 +6,10 @@ const depositSchema = new mongoose.Schema({
         ref: 'Register',
         required: true
     },
-    username: {
-        type: String,
-        required: true
-    },
+    // username: {
+    //     type: String,
+    //     required: true
+    // },
     userid: {
         type: String,
         required: true,

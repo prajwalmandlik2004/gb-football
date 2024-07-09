@@ -28,13 +28,13 @@ body {
     justify-content: center;
     gap: 10px;
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8);
+    /* background-color: rgba(255, 255, 255, 0.8); */
     /* Slightly transparent background for better readability */
     /* border-radius: 15px; */
 }
 
 .betting-card {
-    background-color: #fff;
+    background-color: white;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -87,10 +87,11 @@ body {
     .betting-dashboard {
         flex-direction: column;
         align-items: center;
-        background-color: rgba(255, 255, 255, 0.9);
+        /* background-color: rgba(255, 255, 255, 0.9); */
     }
 
     .betting-card {
         width: 90%;
     }
 }
+
