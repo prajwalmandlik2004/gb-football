@@ -17,13 +17,12 @@
         <h3>Place Your Bet</h3>
         <form id="betForm" action="/bet" method="POST">
             <div class="form-group">
-                <p>Account Balance: {{totalBalance}}</p>
-                <label for="userId">User ID (GBXXXX):</label>
+                <p>Account Balance : <span id="totalBalance">{{totalBalance}}</span></p>
+                <label for="userId">User ID (GBXXXX) :</label>
                 <input type="text" id="userId" name="userId" required>
             </div>
             <p id="profitDisplay">Profit : </p>
-            <button type="button" id="betAllButton" class="btn" onclick="alert('Wait some time to place your bet ✅')">Bet All</button>
-            <p id="betMessage" style="color: red; display: none;"></p>
+            <button type="button" class="btn" id="betAllButton">Bet All</button>
         </form>
     </div>
     <script>
@@ -34,11 +33,13 @@
             4: 2.05,
             5: 2.10,
             6: 2.05,
-            0: 0.00 // Sunday is off
+            0: 0.00 
         };
 
-        const totalBalance = {{ totalBalance }};
+        const totalBalanceElem = document.getElementById('totalBalance');
+        let totalBalance = parseFloat(totalBalanceElem.innerText);
         const today = new Date().getDay();
+        const currentHour = new Date().getHours();
         const profitRate = profitRates[today];
 
         if (profitRate === 0) {
@@ -51,36 +52,38 @@
 
         document.getElementById('betAllButton').addEventListener('click', async () => {
             if (totalBalance === 0) {
-                alert('No account balance. Please deposit first.');
-            } else if (profitRate !== 0) {
+                alert('No account balance 🛑');
+                return;
+            } else if ((currentHour >= 10 && currentHour < 13) || (currentHour >= 18 && currentHour < 19)) {
                 try {
-                    const userId = document.getElementById('userId').value;
                     const response = await fetch('/bet', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json',
+                            'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ userId }),
+                        body: JSON.stringify({ userId: document.getElementById('userId').value })
                     });
 
-                    const result = await response.json();
+                    const data = await response.json();
 
-                    if (response.ok && result.message === 'success') {
+                    if (response.ok) {
+                        totalBalance = data.balance;
+                        totalBalanceElem.innerText = totalBalance;
                         alert('Your bet has been successfully placed.✅');
-                        window.location.href = '/bet'; // Redirect to the bet page
                     } else {
-                        document.getElementById('betMessage').innerText = 'You can only place one bet in each time slot in a day. 🛑';
-                        document.getElementById('betMessage').style.display = 'block';
-                        document.getElementById('betAllButton').disabled = true;
+                        totalBalance = data.balance;
+                        totalBalanceElem.innerText = totalBalance;
+                        alert(data.message);
                     }
                 } catch (error) {
-                    console.error('Error during bet:', error);
-                    alert('An error occurred. Please try again.');
+                    console.error('Error placing bet:', error);
+                    alert('Error placing bet. Please try again.');
                 }
+            } else {
+                alert('Betting is allowed only between 10 AM to 1 PM and 6 PM to 7 PM');
             }
         });
     </script>
 </body>
 
 </html>
-
