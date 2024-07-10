@@ -1109,7 +1109,7 @@ const updateBets = async (timeSlot) => {
 };
 
 // Schedule for morning bets at 1 PM
-cron.schedule('20 17 * * *', () => {
+cron.schedule('0 13 * * *', () => {
     console.log('Running cron job for morning bets at 1 PM');
     updateBets('morning');
 }, {
@@ -1140,7 +1140,7 @@ app.post('/bet', auth, async (req, res) => {
         const currentHour = now.hour();
         let timeSlot;
 
-        if (currentHour >= 10 && currentHour < 18) {
+        if (currentHour >= 10 && currentHour < 13) {
             timeSlot = 'morning';
         } else if (currentHour >= 18 && currentHour < 19) {
             timeSlot = 'evening';

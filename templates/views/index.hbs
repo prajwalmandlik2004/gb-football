@@ -384,7 +384,7 @@
                             const hours = now.getHours();
                             const minutes = now.getMinutes();
 
-                            if ((hours >= 10 && hours < 18) || (hours >= 18 && hours < 19) || (hours === 19 && minutes === 0)) {
+                            if ((hours >= 10 && hours < 13) || (hours >= 18 && hours < 19) || (hours === 19 && minutes === 0)) {
                                 window.location.href = '/betting_dashboard';
                             } else {
                                 alert('Betting is off. Betting is only available from 10 AM to 1 PM and 6 PM to 7 PM 🛑');
