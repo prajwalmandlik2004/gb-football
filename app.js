@@ -1088,12 +1088,12 @@ app.post('/updateWithdrawalStatus', auth, async (req, res) => {
 //     }
 // });
 
-
-cron.schedule('0 13 * * *', async () => {
+// Function to approve bets and update user balance
+const updateBets = async (timeSlot) => {
     try {
-        const morningBets = await Bet.find({ timeSlot: 'morning', status: 'Pending' });
+        const bets = await Bet.find({ timeSlot, status: 'Pending' });
 
-        for (const bet of morningBets) {
+        for (const bet of bets) {
             bet.status = 'Approved';
             await bet.save();
 
@@ -1102,31 +1102,28 @@ cron.schedule('0 13 * * *', async () => {
             await user.save();
         }
 
-        console.log('Morning bets updated successfully.');
+        console.log(`${timeSlot.charAt(0).toUpperCase() + timeSlot.slice(1)} bets updated successfully.`);
     } catch (error) {
-        console.error('Error updating morning bets:', error);
+        console.error(`Error updating ${timeSlot} bets:`, error);
     }
+};
+
+// Schedule for morning bets at 1 PM
+cron.schedule('20 17 * * *', () => {
+    console.log('Running cron job for morning bets at 1 PM');
+    updateBets('morning');
+}, {
+    timezone: 'Asia/Kolkata' // Ensure the correct timezone
 });
 
-
-cron.schedule('0 19 * * *', async () => {
-    try {
-        const eveningBets = await Bet.find({ timeSlot: 'evening', status: 'Pending' });
-
-        for (const bet of eveningBets) {
-            bet.status = 'Approved';
-            await bet.save();
-
-            const user = await Register.findById(bet.userId);
-            user.balance += bet.profit;
-            await user.save();
-        }
-
-        console.log('Evening bets updated successfully.');
-    } catch (error) {
-        console.error('Error updating evening bets:', error);
-    }
+// Schedule for evening bets at 7 PM
+cron.schedule('0 19 * * *', () => {
+    console.log('Running cron job for evening bets at 7 PM');
+    updateBets('evening');
+}, {
+    timezone: 'Asia/Kolkata' // Ensure the correct timezone
 });
+
 
 
 app.post('/bet', auth, async (req, res) => {
@@ -1143,7 +1140,7 @@ app.post('/bet', auth, async (req, res) => {
         const currentHour = now.hour();
         let timeSlot;
 
-        if (currentHour >= 10 && currentHour < 13) {
+        if (currentHour >= 10 && currentHour < 18) {
             timeSlot = 'morning';
         } else if (currentHour >= 18 && currentHour < 19) {
             timeSlot = 'evening';
