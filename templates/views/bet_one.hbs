@@ -8,20 +8,22 @@
 </head>
 
 <body>
+    <div class="background"></div>
     <div class="container">
         <header class="header">
             <img src="/images/football_two.png" alt="GB Football Logo" class="logo">
             <h1 class="site-name">GB FOOTBALL</h1>
         </header>
-         <h3>Place Your Bet</h3>
+        <h3>Place Your Bet</h3>
         <form id="betForm" action="/bet" method="POST">
             <div class="form-group">
-                <p>Account Balance : {{totalBalance}}</p>
-                <label for="userId">User ID (GBXXXX) :</label>
+                <p>Account Balance: {{totalBalance}}</p>
+                <label for="userId">User ID (GBXXXX):</label>
                 <input type="text" id="userId" name="userId" required>
             </div>
             <p id="profitDisplay">Profit : </p>
-            <button type="button" id="betAllButton" class="btn">Bet All</button>
+            <button type="button" id="betAllButton" class="btn" onclick="alert('Wait some time to place your bet ✅')">Bet All</button>
+            <p id="betMessage" style="color: red; display: none;"></p>
         </form>
     </div>
     <script>
@@ -61,16 +63,15 @@
                         body: JSON.stringify({ userId }),
                     });
 
-                    if (response.ok) {
-                        const result = await response.json();
-                        if (result.message === 'success') {
-                            alert('Your bet has been successfully placed.✅');
-                            window.location.href = '/bet'; // Redirect to the bet page
-                        } else {
-                            alert(result.message); // Show the error message from the server
-                        }
+                    const result = await response.json();
+
+                    if (response.ok && result.message === 'success') {
+                        alert('Your bet has been successfully placed.✅');
+                        window.location.href = '/bet'; // Redirect to the bet page
                     } else {
-                        alert('You can only place one bet in each time slot 🛑');
+                        document.getElementById('betMessage').innerText = 'You can only place one bet in each time slot in a day. 🛑';
+                        document.getElementById('betMessage').style.display = 'block';
+                        document.getElementById('betAllButton').disabled = true;
                     }
                 } catch (error) {
                     console.error('Error during bet:', error);
@@ -78,8 +79,8 @@
                 }
             }
         });
-
     </script>
 </body>
 
 </html>
+
