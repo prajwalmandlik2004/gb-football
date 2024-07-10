@@ -161,29 +161,37 @@ app.get('/withdrawal', auth, async (req, res) => {
         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
 
 
-        // Fetch referred users
         const referredUsers = await Register.find({ referrer: req.user.userid });
 
-        // Calculate total balance and referral income for each referred user
-        const referredUsersWithBalance = await Promise.all(referredUsers.map(async (referredUser) => {
-            const userDeposits = await Deposit.find({ userId: referredUser._id, status: 'Approved' });
-            const userWithdrawals = await Withdrawal.find({ userId: referredUser._id, status: 'Approved' });
-            const userBets = await Bet.find({ userId: referredUser._id });
+        const getReferredUsers = async (users, level) => {
+            return Promise.all(users.map(async (user) => {
+                const userDeposits = await Deposit.find({ userId: user._id, status: 'Approved' });
+                const userWithdrawals = await Withdrawal.find({ userId: user._id, status: 'Approved' });
+                const userBets = await Bet.find({ userId: user._id });
 
-            const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
-            const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
-            const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
-            const userTotalBalance = userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit;
+                const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
+                const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+                const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+                const userTotalBalance = parseFloat((userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit).toFixed(2));
 
-            return {
-                ...referredUser._doc,
-                totalBalance: userTotalBalance,
-                status: userTotalBalance > 0 ? 'Active' : 'Not Active'
-            };
-        }));
+                const nextLevelReferredUsers = await Register.find({ referrer: user.userid });
+                const nextLevelUsersWithBalance = await getReferredUsers(nextLevelReferredUsers, level + 1);
 
-        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
+                return {
+                    ...user._doc,
+                    totalBalance: userTotalBalance,
+                    status: userTotalBalance > 0 ? 'Active' : 'Not Active',
+                    level,
+                    referredUsers: nextLevelUsersWithBalance,
+                    userTotalBetsProfit,
+                    firstDepositAmount: userDeposits.length > 0 ? userDeposits[userDeposits.length - 1].amount : 0 // Get the first deposit amount
+                };
+            }));
+        };
 
+        const referredUsersWithBalance = await getReferredUsers(referredUsers, 1);
+
+        const totalReferralIncome = parseFloat((referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.firstDepositAmount * 0.1), 0)).toFixed(2));
 
         const totalBalance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome).toFixed(2));
 
@@ -211,29 +219,37 @@ app.get('/bet', auth, async (req, res) => {
         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
 
 
-        // Fetch referred users
         const referredUsers = await Register.find({ referrer: req.user.userid });
 
-        // Calculate total balance and referral income for each referred user
-        const referredUsersWithBalance = await Promise.all(referredUsers.map(async (referredUser) => {
-            const userDeposits = await Deposit.find({ userId: referredUser._id, status: 'Approved' });
-            const userWithdrawals = await Withdrawal.find({ userId: referredUser._id, status: 'Approved' });
-            const userBets = await Bet.find({ userId: referredUser._id });
+        const getReferredUsers = async (users, level) => {
+            return Promise.all(users.map(async (user) => {
+                const userDeposits = await Deposit.find({ userId: user._id, status: 'Approved' });
+                const userWithdrawals = await Withdrawal.find({ userId: user._id, status: 'Approved' });
+                const userBets = await Bet.find({ userId: user._id });
 
-            const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
-            const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
-            const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
-            const userTotalBalance = userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit;
+                const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
+                const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+                const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+                const userTotalBalance = parseFloat((userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit).toFixed(2));
 
-            return {
-                ...referredUser._doc,
-                totalBalance: userTotalBalance,
-                status: userTotalBalance > 0 ? 'Active' : 'Not Active'
-            };
-        }));
+                const nextLevelReferredUsers = await Register.find({ referrer: user.userid });
+                const nextLevelUsersWithBalance = await getReferredUsers(nextLevelReferredUsers, level + 1);
 
-        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
+                return {
+                    ...user._doc,
+                    totalBalance: userTotalBalance,
+                    status: userTotalBalance > 0 ? 'Active' : 'Not Active',
+                    level,
+                    referredUsers: nextLevelUsersWithBalance,
+                    userTotalBetsProfit,
+                    firstDepositAmount: userDeposits.length > 0 ? userDeposits[userDeposits.length - 1].amount : 0 // Get the first deposit amount
+                };
+            }));
+        };
 
+        const referredUsersWithBalance = await getReferredUsers(referredUsers, 1);
+
+        const totalReferralIncome = parseFloat((referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.firstDepositAmount * 0.1), 0)).toFixed(2));
 
         const totalBalance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome).toFixed(2));
 
@@ -266,28 +282,39 @@ app.get('/userProfile', auth, async (req, res) => {
         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
 
 
-        // Fetch referred users
+
         const referredUsers = await Register.find({ referrer: req.user.userid });
 
-        // Calculate total balance and referral income for each referred user
-        const referredUsersWithBalance = await Promise.all(referredUsers.map(async (referredUser) => {
-            const userDeposits = await Deposit.find({ userId: referredUser._id, status: 'Approved' });
-            const userWithdrawals = await Withdrawal.find({ userId: referredUser._id, status: 'Approved' });
-            const userBets = await Bet.find({ userId: referredUser._id });
+        const getReferredUsers = async (users, level) => {
+            return Promise.all(users.map(async (user) => {
+                const userDeposits = await Deposit.find({ userId: user._id, status: 'Approved' });
+                const userWithdrawals = await Withdrawal.find({ userId: user._id, status: 'Approved' });
+                const userBets = await Bet.find({ userId: user._id });
 
-            const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
-            const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
-            const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
-            const userTotalBalance = userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit;
+                const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
+                const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+                const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+                const userTotalBalance = parseFloat((userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit).toFixed(2));
 
-            return {
-                ...referredUser._doc,
-                totalBalance: userTotalBalance,
-                status: userTotalBalance > 0 ? 'Active' : 'Not Active'
-            };
-        }));
+                const nextLevelReferredUsers = await Register.find({ referrer: user.userid });
+                const nextLevelUsersWithBalance = await getReferredUsers(nextLevelReferredUsers, level + 1);
 
-        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
+                return {
+                    ...user._doc,
+                    totalBalance: userTotalBalance,
+                    status: userTotalBalance > 0 ? 'Active' : 'Not Active',
+                    level,
+                    referredUsers: nextLevelUsersWithBalance,
+                    userTotalBetsProfit,
+                    firstDepositAmount: userDeposits.length > 0 ? userDeposits[userDeposits.length - 1].amount : 0 // Get the first deposit amount
+                };
+            }));
+        };
+
+        const referredUsersWithBalance = await getReferredUsers(referredUsers, 1);
+
+
+        const totalReferralIncome = parseFloat((referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.firstDepositAmount * 0.1), 0)).toFixed(2));
 
 
         const totalBalance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome).toFixed(2));
@@ -301,6 +328,72 @@ app.get('/userProfile', auth, async (req, res) => {
     }
 });
 
+
+
+// app.get('/transaction', auth, async (req, res) => {
+//     try {
+//         const user = await Register.findById(req.user._id);
+//         const deposits = await Deposit.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+//         const withdrawals = await Withdrawal.find({ userId: req.user._id, status: 'Approved' }).sort({ createdAt: -1 });
+//         const bets = await Bet.find({ userId: req.user._id }).sort({ createdAt: -1 });
+
+//         const totalDeposits = deposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
+//         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+//         const totalBetsProfit = parseFloat((bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0)).toFixed(2));
+
+//         const totalBalance = totalDeposits - totalWithdrawals + totalBetsProfit;
+
+//         const totalTeamIncome = parseFloat((deposits.reduce((total, deposit) => total + deposit.teamIncome, 0)).toFixed(2));
+
+//         const referredUsers = await Register.find({ referrer: req.user.userid });
+
+//         const getReferredUsers = async (users, level) => {
+//             return Promise.all(users.map(async (user) => {
+//                 const userDeposits = await Deposit.find({ userId: user._id, status: 'Approved' });
+//                 const userWithdrawals = await Withdrawal.find({ userId: user._id, status: 'Approved' });
+//                 const userBets = await Bet.find({ userId: user._id });
+
+//                 const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
+//                 const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+//                 const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+//                 const userTotalBalance = parseFloat((userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit).toFixed(2));
+
+//                 const nextLevelReferredUsers = await Register.find({ referrer: user.userid });
+//                 const nextLevelUsersWithBalance = await getReferredUsers(nextLevelReferredUsers, level + 1);
+
+//                 return {
+//                     ...user._doc,
+//                     totalBalance: userTotalBalance,
+//                     status: userTotalBalance > 0 ? 'Active' : 'Not Active',
+//                     level,
+//                     referredUsers: nextLevelUsersWithBalance,
+//                     userTotalBetsProfit
+//                 };
+//             }));
+//         };
+
+//         const referredUsersWithBalance = await getReferredUsers(referredUsers, 1);
+
+
+//         const totalLevelIncome = parseFloat(referredUsersWithBalance.reduce((total, referredUser) => {
+//             const level1BetsProfit = referredUser.userTotalBetsProfit * 0.05;
+//             const level2BetsProfit = referredUser.referredUsers.reduce((subTotal, user) => subTotal + (user.userTotalBetsProfit * 0.05), 0);
+//             return total + level1BetsProfit + level2BetsProfit;
+//         }, 0).toFixed(2));
+
+//         const totalReferralIncome = parseFloat((referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0)).toFixed(2));
+//         const totalTeam = referredUsers.length;
+
+//         res.render('transaction', {
+//             user, deposits, totalBetsProfit, totalBalance, withdrawals, bets,
+//             totalReferralIncome, totalTeamIncome, totalLevelIncome, totalTeam,
+//             referredUsers: referredUsersWithBalance
+//         });
+//     } catch (error) {
+//         console.error('Error fetching history:', error);
+//         res.status(500).send('Error fetching history.');
+//     }
+// });
 
 
 app.get('/transaction', auth, async (req, res) => {
@@ -340,13 +433,13 @@ app.get('/transaction', auth, async (req, res) => {
                     status: userTotalBalance > 0 ? 'Active' : 'Not Active',
                     level,
                     referredUsers: nextLevelUsersWithBalance,
-                    userTotalBetsProfit
+                    userTotalBetsProfit,
+                    firstDepositAmount: userDeposits.length > 0 ? userDeposits[userDeposits.length - 1].amount : 0 // Get the first deposit amount
                 };
             }));
         };
 
         const referredUsersWithBalance = await getReferredUsers(referredUsers, 1);
-
 
         const totalLevelIncome = parseFloat(referredUsersWithBalance.reduce((total, referredUser) => {
             const level1BetsProfit = referredUser.userTotalBetsProfit * 0.05;
@@ -354,7 +447,8 @@ app.get('/transaction', auth, async (req, res) => {
             return total + level1BetsProfit + level2BetsProfit;
         }, 0).toFixed(2));
 
-        const totalReferralIncome = parseFloat((referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0)).toFixed(2));
+
+        const totalReferralIncome = parseFloat((referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.firstDepositAmount * 0.1), 0)).toFixed(2));
         const totalTeam = referredUsers.length;
 
         res.render('transaction', {
@@ -367,6 +461,8 @@ app.get('/transaction', auth, async (req, res) => {
         res.status(500).send('Error fetching history.');
     }
 });
+
+
 
 
 
@@ -430,28 +526,38 @@ app.get('/history', auth, async (req, res) => {
         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
 
 
-        // Fetch referred users
+
         const referredUsers = await Register.find({ referrer: req.user.userid });
 
-        // Calculate total balance and referral income for each referred user
-        const referredUsersWithBalance = await Promise.all(referredUsers.map(async (referredUser) => {
-            const userDeposits = await Deposit.find({ userId: referredUser._id, status: 'Approved' });
-            const userWithdrawals = await Withdrawal.find({ userId: referredUser._id, status: 'Approved' });
-            const userBets = await Bet.find({ userId: referredUser._id });
+        const getReferredUsers = async (users, level) => {
+            return Promise.all(users.map(async (user) => {
+                const userDeposits = await Deposit.find({ userId: user._id, status: 'Approved' });
+                const userWithdrawals = await Withdrawal.find({ userId: user._id, status: 'Approved' });
+                const userBets = await Bet.find({ userId: user._id });
 
-            const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
-            const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
-            const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
-            const userTotalBalance = userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit;
+                const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
+                const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+                const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+                const userTotalBalance = parseFloat((userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit).toFixed(2));
 
-            return {
-                ...referredUser._doc,
-                totalBalance: userTotalBalance,
-                status: userTotalBalance > 0 ? 'Active' : 'Not Active'
-            };
-        }));
+                const nextLevelReferredUsers = await Register.find({ referrer: user.userid });
+                const nextLevelUsersWithBalance = await getReferredUsers(nextLevelReferredUsers, level + 1);
 
-        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
+                return {
+                    ...user._doc,
+                    totalBalance: userTotalBalance,
+                    status: userTotalBalance > 0 ? 'Active' : 'Not Active',
+                    level,
+                    referredUsers: nextLevelUsersWithBalance,
+                    userTotalBetsProfit,
+                    firstDepositAmount: userDeposits.length > 0 ? userDeposits[userDeposits.length - 1].amount : 0 // Get the first deposit amount
+                };
+            }));
+        };
+
+        const referredUsersWithBalance = await getReferredUsers(referredUsers, 1);
+
+        const totalReferralIncome = parseFloat((referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.firstDepositAmount * 0.1), 0)).toFixed(2));
 
         const totalBalance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome).toFixed(2));
 
@@ -982,7 +1088,7 @@ app.post('/updateWithdrawalStatus', auth, async (req, res) => {
 //     }
 // });
 
-// Schedule job to update morning bet profits at 1 PM
+
 cron.schedule('0 13 * * *', async () => {
     try {
         const morningBets = await Bet.find({ timeSlot: 'morning', status: 'Pending' });
@@ -1002,7 +1108,7 @@ cron.schedule('0 13 * * *', async () => {
     }
 });
 
-// Schedule job to update evening bet profits at 7 PM
+
 cron.schedule('0 19 * * *', async () => {
     try {
         const eveningBets = await Bet.find({ timeSlot: 'evening', status: 'Pending' });
@@ -1032,7 +1138,7 @@ app.post('/bet', auth, async (req, res) => {
             return res.status(400).json({ message: 'User not found' });
         }
 
-        // Get current time in a specific time zone (e.g., 'Asia/Kolkata')
+
         const now = moment().tz('Asia/Kolkata');
         const currentHour = now.hour();
         let timeSlot;
@@ -1045,7 +1151,7 @@ app.post('/bet', auth, async (req, res) => {
             return res.status(400).json({ message: 'Betting is allowed only between 10 AM to 1 PM and 6 PM to 7 PM' });
         }
 
-        // Check if user has already placed a bet in the current time slot
+
         const existingBet = await Bet.findOne({
             userId: req.user._id,
             timeSlot,
@@ -1056,7 +1162,6 @@ app.post('/bet', auth, async (req, res) => {
         });
 
         if (existingBet) {
-            // Return the zero balance to the client
             return res.status(400).json({ message: 'You have already placed a bet in this time slot 🛑', balance: 0 });
         }
 
@@ -1068,27 +1173,38 @@ app.post('/bet', auth, async (req, res) => {
         const totalWithdrawals = withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
         const totalBetsProfit = bets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
 
+        
         const referredUsers = await Register.find({ referrer: req.user.userid });
 
-        const referredUsersWithBalance = await Promise.all(referredUsers.map(async (referredUser) => {
-            const userDeposits = await Deposit.find({ userId: referredUser._id, status: 'Approved' });
-            const userWithdrawals = await Withdrawal.find({ userId: referredUser._id, status: 'Approved' });
-            const userBets = await Bet.find({ userId: referredUser._id });
+        const getReferredUsers = async (users, level) => {
+            return Promise.all(users.map(async (user) => {
+                const userDeposits = await Deposit.find({ userId: user._id, status: 'Approved' });
+                const userWithdrawals = await Withdrawal.find({ userId: user._id, status: 'Approved' });
+                const userBets = await Bet.find({ userId: user._id });
 
-            const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
-            const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
-            const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
-            const userTotalBalance = userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit;
+                const userTotalDeposits = userDeposits.reduce((total, deposit) => total + deposit.amount + deposit.bonus, 0);
+                const userTotalWithdrawals = userWithdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0);
+                const userTotalBetsProfit = userBets.reduce((total, bet) => bet.status === 'Approved' ? total + bet.profit : total, 0);
+                const userTotalBalance = parseFloat((userTotalDeposits - userTotalWithdrawals + userTotalBetsProfit).toFixed(2));
 
-            return {
-                ...referredUser._doc,
-                totalBalance: userTotalBalance,
-                status: userTotalBalance > 0 ? 'Active' : 'Not Active'
-            };
-        }));
+                const nextLevelReferredUsers = await Register.find({ referrer: user.userid });
+                const nextLevelUsersWithBalance = await getReferredUsers(nextLevelReferredUsers, level + 1);
 
-        const totalReferralIncome = referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.totalBalance * 0.1), 0);
+                return {
+                    ...user._doc,
+                    totalBalance: userTotalBalance,
+                    status: userTotalBalance > 0 ? 'Active' : 'Not Active',
+                    level,
+                    referredUsers: nextLevelUsersWithBalance,
+                    userTotalBetsProfit,
+                    firstDepositAmount: userDeposits.length > 0 ? userDeposits[userDeposits.length - 1].amount : 0 // Get the first deposit amount
+                };
+            }));
+        };
 
+        const referredUsersWithBalance = await getReferredUsers(referredUsers, 1);
+        const totalReferralIncome = parseFloat((referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.firstDepositAmount * 0.1), 0)).toFixed(2));
+        
         const balance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome).toFixed(2));
 
         const today = now.day();
@@ -1110,16 +1226,14 @@ app.post('/bet', auth, async (req, res) => {
             balance: balance,
             profit: profit,
             status: 'Pending',
-            timeSlot // Save the time slot
+            timeSlot
         });
 
         await newBet.save();
 
-        // Update user balance to zero after placing the bet
         user.balance = 0;
         await user.save();
 
-        // Return the updated balance to the client
         res.status(201).json({ message: 'Bet placed successfully', balance: 0 });
     } catch (error) {
         console.error('Error during bet:', error);
