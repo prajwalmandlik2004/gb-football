@@ -51,10 +51,14 @@
         }
 
         document.getElementById('betAllButton').addEventListener('click', async () => {
+            const currentHour = new Date().getHours();
+
             if (totalBalance === 0) {
                 alert('No account balance 🛑');
                 return;
-            } else if ((currentHour >= 10 && currentHour < 13) || (currentHour >= 18 && currentHour < 19)) {
+            }
+
+            if ((currentHour >= 10 && currentHour < 13) || (currentHour >= 18 && currentHour < 19)) {
                 try {
                     const response = await fetch('/bet', {
                         method: 'POST',
@@ -67,12 +71,10 @@
                     const data = await response.json();
 
                     if (response.ok) {
-                        totalBalance = data.balance;
+                        totalBalance = 0; // Set the balance to 0 after successful bet
                         totalBalanceElem.innerText = totalBalance;
                         alert('Your bet has been successfully placed.✅');
                     } else {
-                        totalBalance = data.balance;
-                        totalBalanceElem.innerText = totalBalance;
                         alert(data.message);
                     }
                 } catch (error) {
@@ -87,3 +89,4 @@
 </body>
 
 </html>
+
