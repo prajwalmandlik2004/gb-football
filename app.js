@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const hbs = require('hbs');
-const moment = require('moment');
+const moment = require('moment-timezone');
 require('dotenv').config();
 require('./database/connection');
 const Register = require('./models/register');
@@ -1023,7 +1023,6 @@ cron.schedule('0 19 * * *', async () => {
 });
 
 
-
 app.post('/bet', auth, async (req, res) => {
     try {
         const { userId } = req.body;
@@ -1033,8 +1032,8 @@ app.post('/bet', auth, async (req, res) => {
             return res.status(400).json({ message: 'User not found' });
         }
 
-        // Get current time and determine time slot
-        const now = moment();
+        // Get current time in a specific time zone (e.g., 'Asia/Kolkata')
+        const now = moment().tz('Asia/Kolkata');
         const currentHour = now.hour();
         let timeSlot;
 
@@ -1092,7 +1091,7 @@ app.post('/bet', auth, async (req, res) => {
 
         const balance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome).toFixed(2));
 
-        const today = new Date().getDay();
+        const today = now.day();
         const profitRates = {
             1: 2.10,
             2: 2.20,
@@ -1127,7 +1126,6 @@ app.post('/bet', auth, async (req, res) => {
         res.status(500).send('Error processing bet.');
     }
 });
-
 
 
 
