@@ -4976,6 +4976,11 @@ blockquote:before {
     position: absolute;
 }
 
+.intro{
+    border-radius: 10px;
+    filter: saturate(2);
+}
+
 .teams {
     display: flex;
     justify-content: space-between;
@@ -10267,7 +10272,7 @@ footer.footer-white .footer-bottom a {
 /*=Section Head Part=*/
 
 .section-head {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .section-head.no-margin {
@@ -11657,13 +11662,13 @@ ol.commentlist li .star-rating {
 .refer {
     text-align: center;
     padding: 10px;
-    color : white;
+    color : black;
 }
 
 
 .just {
-    /* background-color: #054649; */
-    background: linear-gradient(135deg, rgb(15, 212, 15), rgb(71, 172, 249));
+    background-color: white;
+    /* background: linear-gradient(135deg, rgb(15, 212, 15), rgb(71, 172, 249)); */
     width: 100%;
     padding: 10px;
     margin: 0 auto;
