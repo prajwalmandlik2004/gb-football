@@ -30,17 +30,17 @@
 
             <div class="form-group">
                 <label for="userid">User ID (GBXXXX)</label>
-                <input type="text" id="userid" name="userid" required><br>
+                <input type="text" placeholder="Enter user id" id="userid" name="userid" required><br>
             </div>
 
             <div class="form-group">
                 <label for="withdrawAmount">Withdraw Amount:</label>
-                <input type="number" id="withdrawAmount" name="withdrawAmount" required min="300" max="20000"><br>
+                <input type="number" placeholder="Enter amount" id="withdrawAmount" name="withdrawAmount" required min="300" max="20000"><br>
             </div>
 
-            <p style="color: red;">Withdrawal Charges - 10%</p>
+            <p style="color: rgb(250, 178, 33);">Withdrawal Charges - 10%</p>
             <p id="calculatedAmountMessage"></p>
-            <p id="withdrawalErrorMessage" style="color: red;"></p>
+            <p id="withdrawalErrorMessage" style="color: rgb(250, 178, 33);"></p>
             <button type="submit" class="btn">Request Withdrawal</button>
         </form>
     </div>

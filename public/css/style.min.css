@@ -11657,12 +11657,13 @@ ol.commentlist li .star-rating {
 .refer {
     text-align: center;
     padding: 10px;
-    /* color : white; */
+    color : white;
 }
 
 
 .just {
-    background-color: white;
+    /* background-color: #054649; */
+    background: linear-gradient(135deg, rgb(15, 212, 15), rgb(71, 172, 249));
     width: 100%;
     padding: 10px;
     margin: 0 auto;
