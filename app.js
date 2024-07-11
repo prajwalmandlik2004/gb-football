@@ -26,7 +26,7 @@ hbs.registerHelper('eq', function (a, b) {
 
 const betsData = {
     bets: [
-        { score: "0 - 0", profit: "1.07%" },
+        { score: "0 - 0", profit: "2.20%" },
         { score: "0 - 1", profit: "4.79%" },
         { score: "0 - 2", profit: "2.05%" },
         { score: "0 - 3", profit: "1.41%" },

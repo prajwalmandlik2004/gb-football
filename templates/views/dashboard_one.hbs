@@ -7,6 +7,7 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
+
 <body>
     <div class="background"></div>
     <div class="container">
@@ -14,9 +15,13 @@
             <img src="/images/football_two.png" alt="GB Football Logo" class="logo">
             <h1 class="site-name">GB FOOTBALL</h1>
         </header>
-        <h3>Recharge Now</h3>
+        <h3>Deposit Funds</h3>
         <div id="depositFormDiv">
             <form id="depositForm">
+                {{!-- <div class="form-group">
+                    <label for="username">Full Name</label>
+                    <input type="text" id="username" name="username" required>
+                </div> --}}
                 <div class="form-group">
                     <label for="userid">User ID (GBXXXX)</label>
                     <input type="text" id="userid" name="userid" required>
@@ -26,18 +31,8 @@
                     <input type="password" id="userpassword" name="userpassword" required>
                 </div>
                 <div class="form-group">
-                    <label for="depositAmount">Select Amount (INR)</label>
-                    <input type="hidden" id="depositAmount" name="amount" required>
-                    <div>
-                        <button type="button" class="amount-btn" data-amount="300">₹300</button>
-                        <button type="button" class="amount-btn" data-amount="500">₹500</button>
-                        <button type="button" class="amount-btn" data-amount="1000">₹1000</button>
-                        <button type="button" class="amount-btn" data-amount="2000">₹2000</button>
-                        <button type="button" class="amount-btn" data-amount="5000">₹5000</button>
-                        <button type="button" class="amount-btn" data-amount="10000">₹10000</button>
-                        <button type="button" class="amount-btn" data-amount="20000">₹20000</button>
-                        <button type="button" class="amount-btn" data-amount="50000">₹50000</button>
-                    </div>
+                    <label for="depositAmount">Enter Amount (INR)</label>
+                    <input type="number" id="depositAmount" name="amount" min="100" max="1000000" required>
                     <br>
                     <small style="color:red;">Allowed range: 300 - 1,000,000 INR</small>
                 </div>
@@ -45,12 +40,14 @@
             </form>
         </div>
 
+        <!-- QR Code (initially hidden) -->
         <div id="qrCode" style="display: none;">
             <h3>Scan to Pay</h3>
             <img src="/images/gb_qr.jpg" alt="QR Code">
             <button id="uploadScreenshotBtn" class="btn">Upload Payment Screenshot</button>
         </div>
 
+        <!-- Upload Screenshot (initially hidden) -->
         <div id="uploadScreenshot" style="display: none;">
             <h3>Upload Screenshot</h3>
             <form id="screenshotForm">
@@ -68,5 +65,4 @@
 </body>
 
 </html>
-
 

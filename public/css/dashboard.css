@@ -13,6 +13,32 @@ body {
     box-sizing: border-box;
 }
 
+
+/* Amount Button */
+
+.amount-btn {
+    display: inline-block;
+    margin: 5px;
+    padding: 8px 13px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #0cc446;
+    color: white;
+}
+
+.amount-btn:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.amount-btn.selected {
+    background-color: #4285f4;
+    color: white;
+}
+
+
 .background {
     position: absolute;
     top: 0;
@@ -21,7 +47,7 @@ body {
     height: 100%;
     background: url("/images/football_background.jpg") no-repeat center center;
     background-size: cover;
-    filter: saturate(2); 
+    filter: saturate(2);
     z-index: -1;
 }
 
@@ -162,4 +188,3 @@ img {
         padding: 10px;
     }
 }
-
