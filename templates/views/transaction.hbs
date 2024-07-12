@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transaction History</title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="css/transaction.css">
 </head>
 
@@ -31,6 +31,12 @@
                     </div>
                     <div class="income-box level-income">
                         Level Income: {{totalLevelIncome}}
+                    </div>
+                    <div class="income-box total-team-income">
+                        Team Business: {{teamBusiness}}
+                    </div>
+                    <div class="income-box total-team-income">
+                        Today's Profit: {{todaysProfit}}
                     </div>
                 </div>
             </div>
@@ -65,16 +71,24 @@
                                     </p>
                                 </td>
                                 <td>
-                                    <form action="/transaction/level" method="GET" style="display:inline;">
-                                        <input type="hidden" name="userId" value="{{this.userid}}">
-                                        <input type="hidden" name="level" value="2">
-                                        <button type="submit" class="btn btn-primary mt-2">Level 2</button>
-                                    </form>
-                                    <form action="/transaction/level" method="GET" style="display:inline;">
-                                        <input type="hidden" name="userId" value="{{this.userid}}">
-                                        <input type="hidden" name="level" value="3">
-                                        <button type="submit" class="btn btn-secondary mt-2">Level 3</button>
-                                    </form>
+                                    <div class="btn-group mt-2">
+                                        <button type="button" class="btn btn-primary dropdown-toggle"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Level
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <form action="/transaction/level" method="GET" class="dropdown-item p-0">
+                                                <input type="hidden" name="userId" value="{{this.userid}}">
+                                                <input type="hidden" name="level" value="2">
+                                                <button type="submit" class="btn btn-link p-0 m-2">Level 2</button>
+                                            </form>
+                                            <form action="/transaction/level" method="GET" class="dropdown-item p-0">
+                                                <input type="hidden" name="userId" value="{{this.userid}}">
+                                                <input type="hidden" name="level" value="3">
+                                                <button type="submit" class="btn btn-link p-0 m-2">Level 3</button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             {{/each}}
@@ -94,5 +108,6 @@
 </body>
 
 </html>
+
 
 
