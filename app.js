@@ -138,6 +138,14 @@ app.get('/contact', (req, res) => {
     res.render("contact");
 });
 
+app.get('/privacy', (req, res) => {
+    res.render("privacy");
+});
+
+app.get('/disclaimer', (req, res) => {
+    res.render("disclaimer");
+});
+
 app.get('/dashboard', (req, res) => {
     res.render("dashboard", { user: req.user });
 });
