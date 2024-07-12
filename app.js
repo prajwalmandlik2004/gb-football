@@ -467,12 +467,13 @@ app.get('/transaction', auth, async (req, res) => {
 
         // New variable for Team Business
         const teamBusiness = parseFloat((referredUsersWithBalance.reduce((total, user) => total + user.totalBalance, 0)).toFixed(2));
+        const todaysTeamProfit = parseFloat((todaysProfit).toFixed(2));
 
         res.render('transaction', {
             user, deposits, totalBetsProfit, totalBalance, withdrawals, bets,
             totalReferralIncome, totalTeamIncome, totalLevelIncome, totalTeam,
             referredUsers: referredUsersWithBalance,
-            todaysProfit, // Adding today's profit to the response
+            todaysTeamProfit, // Adding today's profit to the response
             teamBusiness // Adding team business to the response
         });
     } catch (error) {
