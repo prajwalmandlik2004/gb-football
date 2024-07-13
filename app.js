@@ -428,6 +428,13 @@ app.get('/transaction', auth, async (req, res) => {
         const today = new Date().toISOString().split('T')[0];
         let todaysProfit = 0;
 
+        // New variable for My Profit
+        const myProfit = bets.reduce((total, bet) => {
+            const betDate = new Date(bet.createdAt).toISOString().split('T')[0];
+            return bet.status === 'Approved' && betDate === today ? total + bet.profit : total;
+        }, 0);
+
+
         const getReferredUsers = async (users, level) => {
             return Promise.all(users.map(async (user) => {
                 const userDeposits = await Deposit.find({ userId: user._id, status: 'Approved' });
@@ -482,7 +489,8 @@ app.get('/transaction', auth, async (req, res) => {
             totalReferralIncome, totalTeamIncome, totalLevelIncome, totalTeam,
             referredUsers: referredUsersWithBalance,
             todaysTeamProfit, // Adding today's profit to the response
-            teamBusiness // Adding team business to the response
+            teamBusiness, // Adding team business to the response
+            myProfit: parseFloat(myProfit.toFixed(2))
         });
     } catch (error) {
         console.error('Error fetching history:', error);
