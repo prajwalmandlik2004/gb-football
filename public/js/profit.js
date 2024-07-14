@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     switch (dayNumber) {
         case 0:
-            profitMessage = "2.10 %";
+            profitMessage = "OFF";
             break;
         case 1:
             profitMessage = "2.10 %";

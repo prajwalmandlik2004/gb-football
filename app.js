@@ -459,6 +459,7 @@ app.get('/transaction', auth, async (req, res) => {
         }, 0);
 
         let todaysTopup = 0;
+        let totalReferredUsersCount = 0;
 
         const getReferredUsers = async (users, level) => {
             if (level > 5) return [];
@@ -490,6 +491,8 @@ app.get('/transaction', auth, async (req, res) => {
                 const nextLevelReferredUsers = await Register.find({ referrer: user.userid });
                 const nextLevelUsersWithBalance = await getReferredUsers(nextLevelReferredUsers, level + 1);
 
+                totalReferredUsersCount += nextLevelReferredUsers.length;
+
                 return {
                     ...user._doc,
                     totalBalance: userTotalBalance,
@@ -502,12 +505,14 @@ app.get('/transaction', auth, async (req, res) => {
             }));
         };
 
+        totalReferredUsersCount = referredUsers.length;
+
         const referredUsersWithBalance = await getReferredUsers(referredUsers, 1);
 
         const totalLevelIncome = parseFloat(referredUsersWithBalance.reduce((total, referredUser) => {
             const level1BetsProfit = referredUser.userTotalBetsProfit * 0.05;
             const level2BetsProfit = referredUser.referredUsers.reduce((subTotal, user) => subTotal + (user.userTotalBetsProfit * 0.05), 0);
-            const level3BetsProfit = referredUser.referredUsers.reduce((subTotal, user) => subTotal + (user.referredUsers.reduce((subSubTotal, subUser) => subSubTotal + (subUser.userTotalBetsProfit * 0.05), 0)), 0);
+            const level3BetsProfit = referredUser.referredUsers.reduce((subTotal, user) => subTotal + (user.referredUsers.reduce((subSubTotal, subUser) => subSubTotal + (subUser.userTotalBetsProfit * 0.02), 0)), 0);
             const level4BetsProfit = referredUser.referredUsers.reduce((subTotal, user) => subTotal + (user.referredUsers.reduce((subSubTotal, subUser) => subSubTotal + (subUser.referredUsers.reduce((subSubSubTotal, subSubUser) => subSubSubTotal + (subSubUser.userTotalBetsProfit * 0.01), 0)), 0)), 0);
             const level5BetsProfit = referredUser.referredUsers.reduce((subTotal, user) => subTotal + (user.referredUsers.reduce((subSubTotal, subUser) => subSubTotal + (subUser.referredUsers.reduce((subSubSubTotal, subSubUser) => subSubSubTotal + (subSubUser.userTotalBetsProfit * 0.01), 0)), 0)), 0);
             return total + level1BetsProfit + level2BetsProfit + level3BetsProfit + level4BetsProfit + level5BetsProfit;
@@ -515,7 +520,7 @@ app.get('/transaction', auth, async (req, res) => {
 
 
         const totalReferralIncome = parseFloat((referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.firstDepositAmount * 0.1), 0)).toFixed(2));
-        const totalTeam = referredUsers.length;
+        const totalTeam = totalReferredUsersCount;
 
         const teamBusiness = parseFloat((referredUsersWithBalance.reduce((total, user) => total + user.totalBalance, 0)).toFixed(2));
         const todaysTeamProfit = parseFloat((todaysProfit).toFixed(2));
@@ -1330,7 +1335,7 @@ app.post('/bet', auth, async (req, res) => {
             4: 2.05,
             5: 2.10,
             6: 2.05,
-            0: 2.10
+            0: 0.00
         };
         const profitRate = profitRates[today];
         const profit = balance * (profitRate / 100);
