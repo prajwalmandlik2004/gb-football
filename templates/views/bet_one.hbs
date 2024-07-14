@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <title>Bet</title>
     <link rel="stylesheet" href="./css/bet.css">
+    <!-- Include Moment.js and Moment Timezone -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
 </head>
 
 <body>
@@ -17,70 +20,81 @@
         <h3>Place Your Bet</h3>
         <form id="betForm" action="/bet" method="POST">
             <div class="form-group">
-                <p>Account Balance: {{totalBalance}}</p>
-                <label for="userId">User ID (GBXXXX):</label>
+                <p>Account Balance : <span id="totalBalance">{{totalBalance}}</span></p>
+                <label for="userId">User ID (GBXXXX) :</label>
                 <input type="text" id="userId" name="userId" required>
             </div>
             <p id="profitDisplay">Profit : </p>
-            <button type="button" id="betAllButton" class="btn" onclick="alert('Wait some time to place your bet ✅')">Bet All</button>
-            <p id="betMessage" style="color: red; display: none;"></p>
+            <button type="button" class="btn" id="betAllButton">Bet All</button>
         </form>
     </div>
     <script>
-        const profitRates = {
-            1: 2.10,
-            2: 2.20,
-            3: 2.05,
-            4: 2.05,
-            5: 2.10,
-            6: 2.05,
-            0: 0.00 // Sunday is off
-        };
+        document.addEventListener('DOMContentLoaded', function () {
+            const profitRates = {
+                1: 2.10,
+                2: 2.20,
+                3: 2.05,
+                4: 2.05,
+                5: 2.10,
+                6: 2.05,
+                0: 0.00
+            };
 
-        const totalBalance = {{ totalBalance }};
-        const today = new Date().getDay();
-        const profitRate = profitRates[today];
+            const totalBalanceElem = document.getElementById('totalBalance');
+            let totalBalance = parseFloat(totalBalanceElem.innerText);
 
-        if (profitRate === 0) {
-            document.getElementById('profitDisplay').innerText = 'Today is off. No betting allowed.';
-            document.getElementById('betAllButton').disabled = true;
-        } else {
-            const profit = (totalBalance * profitRate / 100).toFixed(2);
-            document.getElementById('profitDisplay').innerText = `Profit: ${profit}`;
-        }
+            // Get current time in a specific time zone (e.g., 'Asia/Kolkata')
+            const now = moment().tz('Asia/Kolkata');
+            const today = now.day();
+            const currentHour = now.hour();
+            const profitRate = profitRates[today];
 
-        document.getElementById('betAllButton').addEventListener('click', async () => {
-            if (totalBalance === 0) {
-                alert('No account balance. Please deposit first.');
-            } else if (profitRate !== 0) {
-                try {
-                    const userId = document.getElementById('userId').value;
-                    const response = await fetch('/bet', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ userId }),
-                    });
-
-                    const result = await response.json();
-
-                    if (response.ok && result.message === 'success') {
-                        alert('Your bet has been successfully placed.✅');
-                        window.location.href = '/bet'; // Redirect to the bet page
-                    } else {
-                        document.getElementById('betMessage').innerText = 'You can only place one bet in each time slot in a day. 🛑';
-                        document.getElementById('betMessage').style.display = 'block';
-                        document.getElementById('betAllButton').disabled = true;
-                    }
-                } catch (error) {
-                    console.error('Error during bet:', error);
-                    alert('An error occurred. Please try again.');
-                }
+            if (profitRate === 0) {
+                document.getElementById('profitDisplay').innerText = 'Today is off. No betting allowed.';
+                document.getElementById('betAllButton').disabled = true;
+            } else {
+                const profit = (totalBalance * profitRate / 100).toFixed(2);
+                document.getElementById('profitDisplay').innerText = `Profit: ${profit}`;
             }
+
+            document.getElementById('betAllButton').addEventListener('click', async () => {
+                const now = moment().tz('Asia/Kolkata');
+                const currentHour = now.hour();
+
+                if (totalBalance === 0) {
+                    alert('No account balance 🛑');
+                    return;
+                }
+
+                if ((currentHour >= 10 && currentHour < 13) || (currentHour >= 18 && currentHour < 19)) {
+                    try {
+                        const response = await fetch('/bet', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ userId: document.getElementById('userId').value })
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            totalBalance = 0; // Set the balance to 0 after successful bet
+                            totalBalanceElem.innerText = totalBalance;
+                            alert('Your bet has been successfully placed.✅');
+                        } else {
+                            alert(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Error placing bet:', error);
+                        alert('Error placing bet. Please try again.');
+                    }
+                } else {
+                    alert('Betting is allowed only between 10 AM to 1 PM and 6 PM to 7 PM');
+                }
+            });
         });
     </script>
 </body>
 
 </html>
-

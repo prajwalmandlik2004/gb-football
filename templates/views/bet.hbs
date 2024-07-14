@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="./css/bet.css">
     <!-- Include Moment.js and Moment Timezone -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
 </head>
 
 <body>
@@ -37,7 +38,7 @@
                 4: 2.05,
                 5: 2.10,
                 6: 2.05,
-                0: 0.00
+                0: 2.10
             };
 
             const totalBalanceElem = document.getElementById('totalBalance');
@@ -49,13 +50,9 @@
             const currentHour = now.hour();
             const profitRate = profitRates[today];
 
-            if (profitRate === 0) {
-                document.getElementById('profitDisplay').innerText = 'Today is off. No betting allowed.';
-                document.getElementById('betAllButton').disabled = true;
-            } else {
-                const profit = (totalBalance * profitRate / 100).toFixed(2);
-                document.getElementById('profitDisplay').innerText = `Profit: ${profit}`;
-            }
+            const profit = (totalBalance * profitRate / 100).toFixed(2);
+            document.getElementById('profitDisplay').innerText = `Profit: ${profit}`;
+
 
             document.getElementById('betAllButton').addEventListener('click', async () => {
                 const now = moment().tz('Asia/Kolkata');

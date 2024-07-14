@@ -1249,7 +1249,7 @@ app.post('/bet', auth, async (req, res) => {
             4: 2.05,
             5: 2.10,
             6: 2.05,
-            0: 0.00
+            0: 2.10
         };
         const profitRate = profitRates[today];
         const profit = balance * (profitRate / 100);
