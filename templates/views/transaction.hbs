@@ -38,6 +38,9 @@
                     <div class="income-box total-team-income">
                         Today's Team Profit: {{todaysTeamProfit}}
                     </div>
+                    <div class="income-box total-team-income">
+                        Today's Topup: {{todaysTopup}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,6 +90,16 @@
                                                 <input type="hidden" name="level" value="3">
                                                 <button type="submit" class="btn btn-link p-0 m-2">Level 3</button>
                                             </form>
+                                            <form action="/transaction/level" method="GET" class="dropdown-item p-0">
+                                                <input type="hidden" name="userId" value="{{this.userid}}">
+                                                <input type="hidden" name="level" value="4">
+                                                <button type="submit" class="btn btn-link p-0 m-2">Level 4</button>
+                                            </form>
+                                            <form action="/transaction/level" method="GET" class="dropdown-item p-0">
+                                                <input type="hidden" name="userId" value="{{this.userid}}">
+                                                <input type="hidden" name="level" value="5">
+                                                <button type="submit" class="btn btn-link p-0 m-2">Level 5</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </td>
@@ -108,6 +121,3 @@
 </body>
 
 </html>
-
-
-
