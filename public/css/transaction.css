@@ -66,6 +66,11 @@
     background-color: #9a3ee6;
 }
 
+.bet-income{
+    background-color: orange;
+    border : none;
+}
+
 /* Level Dropdown */
 
 .dropdown-menu {
@@ -105,6 +110,7 @@
     border-bottom: 0;
     border-left: 0.3em solid transparent;
 }
+
 
 
 /* Team History */

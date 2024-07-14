@@ -41,6 +41,9 @@
                     <div class="income-box total-team-income">
                         Today's Topup: {{todaysTopup}}
                     </div>
+                    {{#if showBetHistoryButton}}
+                    <button class="income-box bet-income" onclick="window.location.href='/betHistory'">See your bet history</button>
+                    {{/if}}
                 </div>
             </div>
         </div>
