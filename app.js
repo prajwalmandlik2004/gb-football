@@ -655,15 +655,17 @@ app.get('/transaction', auth, async (req, res) => {
             }, 0);
         };
 
-         const calculateTodaysTeamProfit = (users, level) => {
-            if (level > 3) return 0;
-            return users.reduce((total, user) => {
-                return total + user.userTotalBetsProfit + calculateTodaysTeamProfit(user.referredUsers, level + 1);
-            }, 0);
-        };
+        // const calculateTodaysTeamProfit = (users, level) => {
+        //     if (level > 3) return 0;
+        //     return users.reduce((total, user) => {
+        //         return total + user.userTotalBetsProfit + calculateTodaysTeamProfit(user.referredUsers, level + 1);
+        //     }, 0);
+        // };
 
         const teamBusiness = parseFloat(calculateTeamBusiness(referredUsersWithBalance, 1).toFixed(2));
-        const todaysTeamProfit = parseFloat(calculateTodaysTeamProfit(referredUsersWithBalance, 1).toFixed(2));
+        // const todaysTeamProfit = parseFloat(calculateTodaysTeamProfit(referredUsersWithBalance, 1).toFixed(2));
+        const todaysTeamProfit = parseFloat((todaysProfit).toFixed(2));
+
 
         res.render('transaction', {
             user, deposits, totalBetsProfit, totalBalance, withdrawals, bets,
