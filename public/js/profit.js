@@ -10,22 +10,22 @@ document.addEventListener('DOMContentLoaded', () => {
             profitMessage = "OFF";
             break;
         case 1:
-            profitMessage = "2.10 %";
+            profitMessage = "3.30 %";
             break;
         case 2:
-            profitMessage = "2.20 %";
+            profitMessage = "3.50 %";
             break;
         case 3:
-            profitMessage = "2.05 %";
+            profitMessage = "4.10 %";
             break;
         case 4:
-            profitMessage = "2.05 %";
+            profitMessage = "4.20 %";
             break;
         case 5:
-            profitMessage = "2.10 %";
+            profitMessage = "4.05 %";
             break;
         case 6:
-            profitMessage = "2.05 %";
+            profitMessage = "3.75 %";
             break;
         default:
             profitMessage = "OFF";

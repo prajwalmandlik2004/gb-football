@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentDay = now.getDay(); // 0 - Sunday, 1 - Monday, ..., 6 - Saturday
     const currentHour = now.getHours();
 
-    const isBettingTime = (currentHour >= 10 && currentHour < 13) || (currentHour >= 18 && currentHour < 19);
+    const isBettingTime = (currentHour >= 10 && currentHour < 14) || (currentHour >= 18 && currentHour < 19);
 
     if (!isBettingTime) {
         disableBetButton(americaBetButton);

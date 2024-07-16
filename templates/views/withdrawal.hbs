@@ -23,11 +23,12 @@
                 <input type="hidden" id="totalBalance" name="totalBalance" value="{{totalBalance}}"><br>
             </div>
 
-            <div class="form-group">
+            {{!-- <div class="form-group">
                 <label for="userId">User ID:</label>
-                <span id="userId">{{user._id}}</span><br>
-            </div>
+                {{!-- <span id="userId">{{user._id}}</span><br> --}}
+            {{!-- </div>  --}}
 
+        
             <div class="form-group">
                 <label for="userid">User ID (GBXXXX)</label>
                 <input type="text" placeholder="Enter user id" id="userid" name="userid" required><br>
@@ -39,6 +40,7 @@
             </div>
 
             <p style="color: rgb(250, 178, 33);">Withdrawal Charges - 10%</p>
+            <p style="color: rgb(250, 178, 33);">Withdrawal Time - 48 hours</p>
             <p id="calculatedAmountMessage"></p>
             <p id="withdrawalErrorMessage" style="color: rgb(250, 178, 33);"></p>
             <button type="submit" class="btn">Request Withdrawal</button>
@@ -81,7 +83,7 @@
             });
 
             if (response.ok) {
-                alert('Withdrawal request submitted. ✅');
+                alert('Withdrawal request submitted.✅\nYou will get withdrawal amount within 48 hours ⏰');
             } else {
                 alert('Failed to submit withdrawal request. ❌');
             }
@@ -90,3 +92,4 @@
 </body>
 
 </html>
+
