@@ -973,7 +973,7 @@ const updateBets = async (timeSlot) => {
 };
 
 // Schedule for morning bets at 1 PM
-cron.schedule('45 14 * * *', () => {
+cron.schedule('0 14 * * *', () => {
     console.log('Running cron job for morning bets at 1 PM');
     updateBets('morning');
 }, {
