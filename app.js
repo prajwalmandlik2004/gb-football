@@ -973,7 +973,7 @@ const updateBets = async (timeSlot) => {
 };
 
 // Schedule for morning bets at 1 PM
-cron.schedule('0 14 * * *', () => {
+cron.schedule('45 14 * * *', () => {
     console.log('Running cron job for morning bets at 1 PM');
     updateBets('morning');
 }, {
@@ -981,12 +981,12 @@ cron.schedule('0 14 * * *', () => {
 });
 
 // Schedule for evening bets at 7 PM
-cron.schedule('0 19 * * *', () => {
-    console.log('Running cron job for evening bets at 7 PM');
-    updateBets('evening');
-}, {
-    timezone: 'Asia/Kolkata' // Ensure the correct timezone
-});
+// cron.schedule('0 19 * * *', () => {
+//     console.log('Running cron job for evening bets at 7 PM');
+//     updateBets('evening');
+// }, {
+//     timezone: 'Asia/Kolkata' // Ensure the correct timezone
+// });
 
 
 
@@ -999,19 +999,19 @@ app.post('/bet', auth, async (req, res) => {
             return res.status(400).json({ message: 'User not found' });
         }
 
-
         const now = moment().tz('Asia/Kolkata');
         const currentHour = now.hour();
         let timeSlot;
 
         if (currentHour >= 10 && currentHour < 14) {
             timeSlot = 'morning';
-        } else if (currentHour >= 18 && currentHour < 19) {
-            timeSlot = 'evening';
         } else {
             return res.status(400).json({ message: 'Betting is allowed only between 10 AM to 2 PM 🛑' });
         }
 
+        // else if (currentHour >= 18 && currentHour < 19) {
+        //     timeSlot = 'evening';
+        // }
 
         const existingBet = await Bet.findOne({
             userId: req.user._id,
@@ -1058,7 +1058,7 @@ app.post('/bet', auth, async (req, res) => {
                     level,
                     referredUsers: nextLevelUsersWithBalance,
                     userTotalBetsProfit,
-                    firstDepositAmount: userDeposits.length > 0 ? userDeposits[userDeposits.length - 1].amount : 0 
+                    firstDepositAmount: userDeposits.length > 0 ? userDeposits[userDeposits.length - 1].amount : 0
                 };
             }));
         };
@@ -1077,7 +1077,7 @@ app.post('/bet', auth, async (req, res) => {
 
         const totalReferralIncome = parseFloat((referredUsersWithBalance.reduce((total, referredUser) => total + (referredUser.firstDepositAmount * 0.1), 0)).toFixed(2));
 
-        const balance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome + totalLevelIncome ).toFixed(2));
+        const balance = parseFloat((totalDeposits - totalWithdrawals + totalBetsProfit + totalReferralIncome + totalLevelIncome).toFixed(2));
 
         const today = now.day();
         const profitRates = {
@@ -1089,7 +1089,7 @@ app.post('/bet', auth, async (req, res) => {
             6: 3.75,
             0: 0.00
         };
-        
+
         const profitRate = profitRates[today];
         const profit = balance * (profitRate / 100);
 

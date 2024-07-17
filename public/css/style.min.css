@@ -2923,6 +2923,15 @@ blockquote:before {
     z-index: -1;
 }
 
+.bg-custom {
+    /* background-image: url('../images/cool.png');  */
+    background-color: white;
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat;
+}
+
+
 .header-curve .logo-header:before {
     right: -50px;
     width: 80%;
